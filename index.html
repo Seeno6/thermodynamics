@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heat Hero Trainer</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2330;--mut:#5b6475;--line:#dfe3ea;--acc:#d9480f;--accbg:#fff0e8;--ok:#2b8a3e;--okbg:#e6f6ea;--bad:#c92a2a;--badbg:#fdeaea;--b:#1c7ed6;--c:#7048e8}
+@media (prefers-color-scheme:dark){:root{--bg:#14171d;--card:#1d222b;--ink:#e8ebf1;--mut:#9aa4b5;--line:#2c3340;--acc:#ff8c5a;--accbg:#3a2418;--ok:#5fd07a;--okbg:#17301f;--bad:#ff7a7a;--badbg:#3a1c1c;--b:#5aa9f0;--c:#a58bff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}.sub{color:var(--mut);font-size:14px;margin-bottom:12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;font-size:15px}
+.tab.on{color:#fff;border-color:transparent}.tab.on.B{background:var(--b)}.tab.on.C{background:var(--c)}.tab.on.T{background:var(--acc)}
+.sub-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px}
+.st{border:0;border-bottom:3px solid transparent;background:none;color:var(--mut);padding:6px 10px;cursor:pointer;font-weight:600;font-size:15px}
+.st.on{color:var(--ink);border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.card h3{margin:0 0 6px;font-size:17px}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;padding:2px 9px;margin-left:6px;background:var(--accbg);color:var(--acc)}
+.tip{background:var(--accbg);border-left:4px solid var(--acc);padding:8px 12px;border-radius:6px;margin:8px 0;font-size:15px}
+ul{margin:6px 0;padding-left:20px}li{margin:3px 0}
+button.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer;font-size:15px}
+button.ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer;font-size:15px}
+.opt:hover{border-color:var(--acc)}.opt.ok{background:var(--okbg);border-color:var(--ok)}.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.fb{margin-top:8px;padding:8px 12px;border-radius:8px}.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+input,select{font-size:16px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);max-width:100%}
+input[type=number]{width:130px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.res{background:var(--okbg);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:15px}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--ok)}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--accbg)}
+a{color:var(--b);font-weight:600}a:visited{color:var(--c)}
+.lyrbox{position:relative;max-height:55vh;overflow-y:auto;margin-top:6px}
+.small{font-size:13px;color:var(--mut)}
+h2.th{font-size:18px;margin:22px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+details.les summary,details.card summary{cursor:pointer;font-size:17px;list-style:none}details.les summary::-webkit-details-marker,details.card summary::-webkit-details-marker{display:none}
+details.les summary:before,details.card summary:before{content:"\25b6 ";font-size:12px;color:var(--acc)}details[open]>summary:before{content:"\25bc "}
+.ic{font-size:22px}.hook{font-weight:600;margin:8px 0;color:var(--acc)}.try{background:var(--okbg);border-radius:8px;padding:8px 12px;margin:8px 0}
+.mem{background:var(--accbg);border-left:4px solid var(--acc);border-radius:6px;padding:8px 12px;margin:8px 0}.cx{background:var(--accbg);border-left:4px solid var(--c);border-radius:6px;padding:8px 12px;margin:8px 0}
+.pill.cp{background:var(--c);color:#fff}.xp{font-size:14px;margin:2px 0 10px}.xpbar{height:10px;background:var(--line);border-radius:8px;overflow:hidden;max-width:360px}.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#fcc419)}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="config.js"></script></head><body><div class="wrap">
+<h1>🔥 Heat Hero: Thermodynamics Trainer</h1><div id="xp" class="xp"></div>
+<div class="sub">Science Olympiad 2027 &middot; no-math-stress mode: every number problem has hints, steps and a calculator.</div>
+<div class="tabs" id="tabs"></div><div class="sub-tabs" id="subtabs"></div><div id="view"></div>
+<p class="small">Division B facts come from the official 2027 Thermodynamics B rules. The 2027 Division C rules PDF has not been read yet, so Division C content is a best estimate (B topics + State/National radiation topics + harder calculations). Confirm against the C rules when you have them.</p>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const TOPICS={sys:'Systems, temperature & units',phase:'Phases & gas law',heat:'Heat transfer & capacity',proc:'Processes, cycles & laws',hist:'History',dev:'Device & scoring',rad:'Radiation & 3rd law (State/Nat, C)'};
+// ---------- LEARN CONTENT ----------
+const LESSONS=[
+{id:'s1',t:'sys',i:'🛁',n:'Heat vs Temperature',hook:'Temperature is the thermometer reading. Heat is the energy that travels.',st:['Temperature = how hot something is (a number on a thermometer).','Heat = energy that moves from hot stuff to cold stuff.','A bathtub of warm water holds MORE heat than a cup of hot coffee, even though the coffee has the higher temperature.','By itself, heat only flows one way: hot to cold.'],mem:'Temperature = the reading. Heat = the traveling.'},
+{id:'s2',t:'sys',i:'📦',n:'Systems: open, closed, isolated',hook:'Draw a box around the thing you study.',st:['The thing inside the box is the SYSTEM. Everything outside is the SURROUNDINGS.','OPEN: matter and energy can cross (a pot of water with no lid).','CLOSED: only energy crosses (a sealed jar on a stove).','ISOLATED: nothing crosses (a perfect sealed thermos).'],mem:'Open = both. Closed = energy only. Isolated = nothing.'},
+{id:'s3',t:'sys',i:'✂️',n:'Intensive vs extensive',hook:'The cut-it-in-half test.',st:['Imagine cutting your sample in half.','If a property stays the SAME, it is INTENSIVE: temperature, pressure, density.','If it gets cut in HALF too, it is EXTENSIVE: mass, volume, total energy.'],mem:'Cut it in half: same = intensive, half = extensive.'},
+{id:'s4',t:'sys',i:'🤝',n:'Zeroth law: why thermometers work',hook:'If A matches C and B matches C, then A matches B.',st:['Two things are in thermal equilibrium when no heat flows between them.','If A is in equilibrium with C, and B is in equilibrium with C, then A and B are in equilibrium too.','The thermometer is the "C". That is why we can compare temperatures without touching the objects together.'],mem:'A = C and B = C, so A = B.'},
+{id:'s5',t:'sys',i:'🌡️',n:'Temperature scales and absolute zero',hook:'Kelvin is just Celsius with the start moved to the coldest possible point.',st:['Kelvin = Celsius + 273.15. Just add.','Absolute zero = 0 K = −273.15 °C. Nothing can be colder.','Fahrenheit to Celsius: subtract 32, then multiply by 5/9.'],ex:{q:'Convert 70 °F to kelvin.',st:['70 − 32 = 38','38 × 5/9 = 21.1 °C','21.1 + 273.15 = 294.3 K']},mem:'F to K: minus 32, times 5/9, plus 273.'},
+{id:'s6',t:'sys',i:'⚡',n:'Units of heat',hook:'Joules measure energy. Everything else is a cousin.',st:['JOULE (J) is the standard unit of energy and heat.','CALORIE = energy to warm 1 gram of water by 1 °C (about 4.184 J).','BTU = energy to warm 1 pound of water by 1 °F (about 1055 J).','Watt = joules per second (that is power, not energy). Kelvin = temperature. Pascal = pressure.'],mem:'Calorie = 1 gram, 1 degree.'},
+{id:'p1',t:'phase',i:'🧊',n:'The phase changes',hook:'Know the name of every jump.',st:['Solid to liquid = MELTING. Liquid to solid = FREEZING.','Liquid to gas = BOILING / evaporation. Gas to liquid = CONDENSATION.','Solid straight to gas = SUBLIMATION (dry ice).','Gas straight to solid = DEPOSITION (frost).'],mem:'Sublimation skips the liquid going up. Deposition skips it coming down.'},
+{id:'p2',t:'phase',i:'🕵️',n:'Latent vs sensible heat',hook:'Latent = hidden. The thermometer does not move.',st:['SENSIBLE heat changes the temperature. You can "sense" it on a thermometer.','LATENT heat is energy used to change phase. Temperature stays put while it happens.','Example: ice melting at 0 °C stays at 0 °C the whole time, even with heat flowing in.','Melting 1 kg of ice takes 334,000 J, a lot!'],mem:'Latent = hidden (no thermometer change).'},
+{id:'p3',t:'phase',i:'🗺️',n:'Phase diagrams and the triple point',hook:'A map of what water (or CO2) is doing.',st:['Left-right = temperature. Up-down = pressure.','Each region is one phase: solid, liquid, gas.','A line between regions = two phases coexist in balance.','The TRIPLE POINT is where all three lines meet: all three phases at once.','Past the critical point, liquid and gas blend into one fluid.'],mem:'Triple point = all three phases at once.'},
+{id:'p4',t:'phase',i:'🎈',n:'Gas law: squeeze it, heat it',hook:'Hotter gas in a box pushes harder.',st:['The ideal gas law is pV = nRT (pressure x volume = amount x R x temperature).','Heat a gas in a rigid box and the pressure goes UP.','Squeeze a gas into less space and the pressure goes UP.'],cx:['Need the volume? V = nRT ÷ p. Use R = 8.314, T in kelvin, p in pascals.','Example: 1 mol at 300 K and 100 kPa. 1 x 8.314 x 300 = 2494. Then 2494 ÷ 100,000 = 0.02494 m³ = 24.9 L.'],mem:'Hotter gas in a box pushes harder.'},
+{id:'h1',t:'heat',i:'🔥',n:'Three ways heat moves',hook:'Touch, Flow, Glow.',st:['CONDUCTION = touch. Heat moves through a solid (a spoon in hot soup).','CONVECTION = flow. A moving fluid carries heat (warm air rising).','RADIATION = glow. Electromagnetic waves, no material needed.','The lamp heats your cup mostly by radiation.'],mem:'Touch, Flow, Glow.'},
+{id:'h2',t:'heat',i:'🧱',n:'Conductors vs insulators',hook:'Metal moves heat. Foam holds it.',st:['Thermal conductivity = how easily a material passes heat.','Metals (copper, aluminum) conduct heat very well.','Foam, wool, and trapped air conduct very poorly: they are insulators.','Trapped air is the secret ingredient in most insulation.'],mem:'Metal moves heat, foam holds it.'},
+{id:'h3',t:'heat',i:'🐢',n:'Specific heat: how stubborn is it?',hook:'High specific heat = stubborn: slow to heat, slow to cool.',st:['Specific heat = energy needed to warm 1 kg of a material by 1 degree.','Water is VERY stubborn: 4186 J per kg per degree.','Metals are not stubborn: they heat up fast.','Heat capacity of a whole object = mass x specific heat.'],mem:'High specific heat = stubborn.'},
+{id:'h4',t:'heat',i:'🧮',n:'Q = m × c × ΔT (the one formula)',hook:'Mass x stubbornness x temperature change.',st:['Step 1: write the mass (m).','Step 2: write the specific heat (c). For water: 4.186 J per gram per °C.','Step 3: ΔT = end temperature minus start temperature.','Step 4: multiply the three numbers. The answer Q is in joules.','Shortcut: 100 g of water needs 418.6 J for every 1 °C.'],ex:{q:'How much energy warms 100 g of water from 20 °C to 32 °C?',st:['ΔT = 32 − 20 = 12','Q = 100 × 4.186 × 12','Q = 5023 J']},mem:'Q = mass x stubbornness x change.'},
+{id:'h5',t:'heat',c:1,i:'🚪',n:'Heat through a wall (conduction rate)',hook:'Thick walls need a big temperature difference.',st:['Formula: ΔT = Q × L ÷ (k × A). Q = heat flow in watts, L = thickness, k = conductivity, A = area.','Thicker wall (bigger L): bigger ΔT. Better conductor or bigger area: smaller ΔT.','Convert everything to meters first (mm to m).'],ex:{q:'Chip: 5 W, 1 mm thick, 5 mm x 5 mm, k = 200. ΔT?',st:['L = 0.001 m. A = 0.005 x 0.005 = 0.000025 m²','k x A = 200 x 0.000025 = 0.005','Q x L = 5 x 0.001 = 0.005','ΔT = 0.005 ÷ 0.005 = 1 K']},mem:'Thick walls need a big temperature difference.'},
+{id:'h6',t:'heat',c:1,i:'☕',n:'Mixing hot water and ice',hook:'Energy lost by the hot = energy gained by the cold.',st:['Step 1: how much energy can the hot water give while cooling to 0 °C? m x c x ΔT.','Step 2: how much energy is needed to melt ALL the ice? mass x 334,000 J/kg.','If step 1 is smaller: the final temperature is 0 °C and some ice is left. Melted mass = step 1 ÷ 334,000.','If step 1 is bigger: all the ice melts and the final temperature is above 0 °C (use energy balance).'],ex:{q:'4 kg water at 25 °C + 2 kg ice at 0 °C. How much ice melts?',st:['Available: 4 x 4186 x 25 = 418,600 J','Needed for all ice: 2 x 334,000 = 668,000 J (not enough)','Melted = 418,600 ÷ 334,000 = 1.25 kg. Final = 0 °C']},mem:'Check if ALL the ice can melt first.'},
+{id:'r1',t:'proc',i:'🏷️',n:'Process words',hook:'Iso = same.',st:['ISOTHERMAL = temperature stays the same.','ISOBARIC = pressure stays the same.','ISOCHORIC = volume stays the same (so no work is done).','ADIABATIC = no heat gets in or out.','ISENTROPIC = entropy stays the same (reversible adiabatic).'],mem:'Iso = same. Thermal=T, baric=pressure, choric=volume.'},
+{id:'r2',t:'proc',i:'⚖️',n:'First law: energy cannot vanish',hook:'Energy in minus energy out = energy kept.',st:['Energy is conserved: it only changes form or moves.','ΔU = Q − W','Q = heat added TO the system. W = work done BY the system.','ΔU = the change in internal energy.'],ex:{q:'A gas takes in 500 J of heat and does 200 J of work. ΔU?',st:['ΔU = Q − W','500 − 200 = 300 J']},mem:'In minus out = kept.'},
+{id:'r3',t:'proc',i:'➡️',n:'Second law: the one-way street',hook:'Heat rolls downhill, and nothing is free.',st:['Heat does not flow from cold to hot by itself.','No engine can turn all its heat into work. Some is always wasted.','In an isolated system, entropy never decreases.','A fridge can move heat uphill, but only by using power.'],mem:'Heat rolls downhill, nothing is free.'},
+{id:'r4',t:'proc',i:'🌀',n:'Entropy: the mess meter',hook:'Nature drifts toward more spread-out energy.',st:['Entropy = how spread out or disordered the energy is.','Ice melting: entropy goes UP.','Hot and cold mixing: entropy goes UP.','In an isolated system entropy never goes down. That is the second law.'],mem:'Entropy = mess. Nature gets messier.'},
+{id:'r5',t:'proc',i:'⚙️',n:'Engine efficiency (and the Carnot limit)',hook:'What you get out divided by what you put in.',st:['Efficiency = work out ÷ heat in. Multiply by 100 for percent.','Example: 300 J of work from 1000 J of heat = 0.30 = 30%.','No real engine reaches 100%.'],cx:['Carnot limit: max efficiency = 1 − Tcold ÷ Thot. Temperatures MUST be in kelvin.','300 K and 1000 K: 1 − 0.3 = 70%. So an "80% efficient" engine there is impossible.','300 K and 600 K: 1 − 0.5 = 50%.'],mem:'1 minus cold over hot. Kelvin only.'},
+{id:'y1',t:'hist',i:'👨‍🔬',n:'Meet the Heat Heroes',hook:'One name, one word.',st:['JOSEPH BLACK = latent heat and specific heat.','SADI CARNOT = father of thermodynamics, the Carnot cycle (1824).','JAMES JOULE = heat and mechanical work are equivalent.','LORD KELVIN = absolute temperature scale.','RUDOLF CLAUSIUS = second law (1850) and he NAMED entropy (1865).','LUDWIG BOLTZMANN = entropy from molecular statistics.','JAMES CLERK MAXWELL = speed distribution of gas molecules.','MAX PLANCK = energy quanta / blackbody radiation.'],mem:'Black=latent, Carnot=cycle, Joule=work, Kelvin=scale, Clausius=entropy, Boltzmann=statistics, Maxwell=gas speeds, Planck=quanta.'},
+{id:'d1',t:'dev',i:'🛠️',n:'The build rules',hook:'Catch the light, do not touch the water.',st:['Goal: heat 100 mL of room-temp water in a 9 oz cup under a 100–125 W heat lamp.','The device must fit inside a 30 cm cube (with the cup).','No electricity, batteries, or chemical reactions.','Parts may be inside the cup, but NO part may touch the water. Nothing may be added to the water.'],mem:'Catch the light, do not touch the water.'},
+{id:'d2',t:'dev',i:'🚫',n:'How not to lose points',hook:'Hands off, predict on time, no itchy insulation.',st:['Touch the device or lamp setup during the heating time: temperature score AND prediction score become 0.','Predict the final temperature BEFORE the heating time ends, or no prediction score.','Hazardous materials (asbestos, mineral wool, fiberglass): your device is not tested at all.','Each competition violation multiplies scores by 0.9. Each construction violation multiplies by 0.7.'],mem:'Hands off, predict on time, no itchy insulation.'},
+{id:'d3',t:'dev',i:'🏆',n:'How you are scored',hook:'Gain big, guess close.',st:['Total = Exam 50 + Temperature 30 + Prediction 20 = 100.','TS = (your gain ÷ best gain) × 30.','PE = 1 − |final − predicted| ÷ final. Closer guess = closer to 1.','PS = (your PE ÷ best PE) × 20.'],ex:{q:'Gain 14 °C, best gain 20 °C. TS?',st:['14 ÷ 20 = 0.7','0.7 × 30 = 21']},mem:'Gain big, guess close.'},
+{id:'d4',t:'dev',i:'💡',n:'How the lamp heats your cup',hook:'Absorb on top, insulate the sides.',st:['The lamp heats mostly by radiation.','Dark matte surfaces absorb radiation. Shiny and white ones reflect it.','Insulate the sides and cut air drafts around the cup to keep heat in.','Make sure the cup slides in and out easily within your time limit.'],mem:'Absorb on top, insulate the sides.'},
+{id:'c1',t:'rad',c:1,i:'🕳️',n:'Blackbody and radiant exitance',hook:'The perfect glow machine.',st:['A BLACKBODY absorbs all radiation that hits it and emits the maximum possible for its temperature.','RADIANT EXITANCE = power emitted per unit area, in W/m².'],mem:'Blackbody = perfect absorber and emitter.'},
+{id:'c2',t:'rad',c:1,i:'🔝',n:'Stefan–Boltzmann: T to the 4th',hook:'Double the temperature, 16 times the glow.',st:['Exitance = σ × T⁴, with σ = 5.67 × 10⁻⁸.','T must be in KELVIN.','T⁴ means T x T x T x T. Double T: 2x2x2x2 = 16 times the power.'],ex:{q:'Blackbody at 500 K. Exitance?',st:['500 × 500 × 500 × 500 = 62,500,000,000 (6.25e10)','5.67e-8 × 6.25e10 = 3544 W/m²']},mem:'Double the temperature, 16 times the glow.'},
+{id:'c3',t:'rad',c:1,i:'🌈',n:'Wien and Planck',hook:'Hotter = bluer.',st:['Hotter objects glow at SHORTER wavelengths: red-hot to white-hot to blue.','This is Wien’s law.','MAX PLANCK explained blackbody radiation with energy QUANTA (1900).'],mem:'Hotter = bluer. Planck = quanta.'},
+{id:'c4',t:'rad',c:1,i:'❄️',n:'Third law of thermodynamics',hook:'You can get close to absolute zero, never there.',st:['As T approaches 0 K, entropy approaches a minimum.','You cannot reach 0 K in a finite number of steps.'],mem:'Close to zero, never there.'},
+{id:'c5',t:'rad',c:1,i:'🔦',n:'Light spreading out (inverse square)',hook:'Twice as far, a quarter as bright.',st:['A point source spreads its power over a sphere of area 4 × π × r².','Irradiance = power ÷ (4 × π × r²).','Double the distance: area x4, so irradiance ÷4.'],ex:{q:'60 W source, 2 m away. Irradiance?',st:['Area = 4 × 3.1416 × 2² = 50.27 m²','60 ÷ 50.27 = 1.19 W/m²']},mem:'Twice as far, a quarter as bright.'}
+];
+const LES=Object.fromEntries(LESSONS.map(l=>[l.id,l]));
+
+// ---------- QUESTIONS ----------
+const Q=[
+{t:'sys',lv:'B',l:'s3',q:'Which of these is an INTENSIVE property?',o:['Mass','Volume','Temperature','Total energy'],a:2,e:'Intensive = does not change if you cut the sample in half. Temperature stays the same.'},
+{t:'sys',lv:'B',l:'s4',q:'The zeroth law is the reason ___ work.',o:['Thermometers','Steam engines','Refrigerators','Batteries'],a:0,e:'If A and B each match C (the thermometer), A and B match each other.'},
+{t:'sys',lv:'B',l:'s2',q:'A CLOSED system can exchange…',o:['Energy but not matter','Matter but not energy','Nothing','Both matter and energy'],a:0,e:'Open = both, closed = energy only, isolated = nothing.'},
+{t:'sys',lv:'B',l:'s5',q:'Absolute zero is…',o:['0 K','-273 K','0 °C','-100 °C'],a:0,e:'0 K = -273.15 °C.'},
+{t:'sys',lv:'B',l:'s6',q:'Which is a unit of heat (energy)?',o:['Joule','Kelvin','Watt','Pascal'],a:0,e:'Joule = energy. Watt = energy per second. Kelvin = temperature. Pascal = pressure.'},
+{t:'sys',lv:'B',l:'s6',q:'The calorie is the energy needed to raise ___ of water by 1 °C.',o:['1 gram','1 kilogram','1 pound','1 liter'],a:0,e:'1 calorie ≈ 4.184 J for 1 g of water. (BTU uses 1 pound and 1 °F.)'},
+{t:'sys',lv:'B',l:'s1',q:'Temperature measures heat energy.',o:['True','False'],a:1,e:'False. Temperature is how hot; heat is energy transferred. Same temperature can hold very different amounts of heat.'},
+{t:'sys',lv:'B',l:'s5',n:1,q:'Convert 70 °F to kelvin.',a:294.3,tol:0.5,u:'K',h:['Subtract 32: 70-32 = 38','Multiply by 5/9: 38 x 5/9 = 21.1 °C','Add 273.15: 21.1 + 273.15 = 294.3 K'],e:'294.3 K'},
+{t:'sys',lv:'B',l:'s5',n:1,q:'Convert 25 °C to kelvin.',a:298.15,tol:0.2,u:'K',h:['Just add 273.15','25 + 273.15 = 298.15'],e:'298.15 K'},
+{t:'phase',lv:'B',l:'p1',q:'Solid turning straight into gas is called…',o:['Sublimation','Deposition','Melting','Condensation'],a:0,e:'Sublimation (dry ice). The reverse is deposition.'},
+{t:'phase',lv:'B',l:'p2',q:'Latent heat is energy absorbed or released…',o:['during a phase change with no temperature change','while temperature rises in one phase','only by gases','only by metals'],a:0,e:'Latent = hidden: the thermometer does not move while the phase changes.'},
+{t:'phase',lv:'B',l:'p2',q:'Heat that changes an object’s temperature is called…',o:['Sensible heat','Latent heat','Entropy','Enthalpy of fusion'],a:0,e:'Sensible heat you can sense on a thermometer.'},
+{t:'phase',lv:'B',l:'p4',q:'Gas in a rigid sealed container is heated. The pressure…',o:['rises','falls','stays the same','becomes zero'],a:0,e:'pV = nRT with V and n fixed: more T means more p.'},
+{t:'phase',lv:'B',l:'p3',q:'The triple point is where…',o:['solid, liquid and gas coexist','only liquid exists','water boils at 100 °C','gas becomes plasma'],a:0,e:'All three phases in equilibrium at one pressure and temperature.'},
+{t:'heat',lv:'B',l:'h1',q:'Heat transfer by electromagnetic waves is…',o:['Radiation','Conduction','Natural convection','Forced convection'],a:0,e:'Radiation needs no material. It is how the lamp heats your cup.'},
+{t:'heat',lv:'B',l:'h1',q:'Heat moving through a solid by direct contact is…',o:['Conduction','Convection','Radiation','Sublimation'],a:0,e:'Conduction.'},
+{t:'heat',lv:'B',l:'h1',q:'Warm air rising from a hot surface is…',o:['Convection','Conduction','Radiation','Latent heat'],a:0,e:'A moving fluid carries the heat.'},
+{t:'heat',lv:'B',l:'h2',q:'Which makes the BEST insulator?',o:['Foam / trapped air','Copper','Aluminum','Steel'],a:0,e:'Low thermal conductivity. Metals conduct heat well.'},
+{t:'heat',lv:'B',l:'h3',q:'Water has a high specific heat. That means it…',o:['takes lots of energy to change temperature','heats up very quickly','cannot freeze','is a good conductor'],a:0,e:'High specific heat = hard to warm up, hard to cool down.'},
+{t:'heat',lv:'B',l:'h4',n:1,q:'How much energy (J) warms 100 g of water from 20 °C to 32 °C? (c = 4.186 J per g per °C)',a:5023,tol:25,u:'J',h:['Q = m x c x ΔT','ΔT = 32 - 20 = 12','Q = 100 x 4.186 x 12 = 5023 J'],e:'5023 J'},
+{t:'proc',lv:'B',l:'r1',q:'An isothermal process happens at constant…',o:['temperature','pressure','volume','entropy'],a:0,e:'Iso = same; thermal = temperature.'},
+{t:'proc',lv:'B',l:'r1',q:'In an isochoric process, the work done is…',o:['zero','maximum','negative only','equal to heat'],a:0,e:'Constant volume means no expansion, so no pressure-volume work.'},
+{t:'proc',lv:'B',l:'r1',q:'An adiabatic process has no…',o:['heat exchange','work','pressure change','volume change'],a:0,e:'Adiabatic: Q = 0.'},
+{t:'proc',lv:'B',l:'r2',q:'The first law of thermodynamics is basically…',o:['conservation of energy','heat flows cold to hot','entropy is zero at 0 K','all gases are ideal'],a:0,e:'Energy is not created or destroyed.'},
+{t:'proc',lv:'B',l:'r3',q:'The second law says…',o:['No engine is 100% efficient and entropy of an isolated system never decreases','Energy is conserved','Temperature is defined by equilibrium','Entropy is zero at 0 K'],a:0,e:'Second law = direction of heat flow and the efficiency limit.'},
+{t:'proc',lv:'B',l:'r4',q:'Entropy is best described as…',o:['how spread out / disordered the energy is','how hot something is','the amount of mass','the pressure of a gas'],a:0,e:'More spread out = higher entropy.'},
+{t:'proc',lv:'B',l:'r5',n:1,q:'An engine takes in 1000 J of heat and does 300 J of work. What is its efficiency in %?',a:30,tol:0.5,u:'%',h:['Efficiency = work out ÷ heat in','300 ÷ 1000 = 0.30','As a percent: 30%'],e:'30%'},
+{t:'hist',lv:'B',l:'y1',q:'Who found that heat and mechanical work are equivalent?',o:['James Joule','Rudolf Clausius','Jacques Charles','Joseph Black'],a:0,e:'Joule. The energy unit is named after him.'},
+{t:'hist',lv:'B',l:'y1',q:'Latent heat and specific heat were developed by…',o:['Joseph Black','Sadi Carnot','Ludwig Boltzmann','Max Planck'],a:0,e:'Joseph Black (Glasgow), who worked with James Watt.'},
+{t:'hist',lv:'B',l:'y1',q:'Who is called the "father of thermodynamics"?',o:['Sadi Carnot','Lord Kelvin','Maxwell','Planck'],a:0,e:'Carnot, 1824, Reflections on the Motive Power of Fire.'},
+{t:'hist',lv:'B',l:'y1',q:'Who named "entropy" (1865)?',o:['Rudolf Clausius','Sadi Carnot','Joule','Kelvin'],a:0,e:'Clausius.'},
+{t:'hist',lv:'B',l:'y1',q:'Who linked entropy to molecular statistics?',o:['Ludwig Boltzmann','Robert Boyle','Daniel Bernoulli','Schrödinger'],a:0,e:'Boltzmann.'},
+{t:'hist',lv:'B',l:'y1',q:'The absolute temperature scale is associated with…',o:['Lord Kelvin','Clausius','Celsius','Joule'],a:0,e:'Kelvin.'},
+{t:'hist',lv:'B',l:'y1',q:'Gas molecule speed distribution is credited to…',o:['James Clerk Maxwell','Joseph Black','Sadi Carnot','Joule'],a:0,e:'Maxwell (kinetic theory).'},
+{t:'dev',lv:'B',l:'d1',q:'May any part of your device touch the water?',o:['No','Yes, the bottom','Yes, with a lid','Only the cup liner'],a:0,e:'Parts may be inside the cup but none may contact the water. Nothing may be added to the water.'},
+{t:'dev',lv:'B',l:'d2',q:'You touch your device during the heating time. What happens?',o:['TS and PS become 0','Nothing','10% penalty','You redo the run'],a:0,e:'Touching the device or lamp setup during heating gives TS = 0 and PS = 0.'},
+{t:'dev',lv:'B',l:'d2',q:'When must you give your predicted final temperature?',o:['Before the end of the heating time','After the lamp goes off','Before the water is poured','At the end of the written test'],a:0,e:'No prediction in time = no prediction score.'},
+{t:'dev',lv:'B',l:'d2',q:'The score multiplier for ONE construction violation is…',o:['×0.7','×0.9','×0.5','×0'],a:0,e:'Construction ×0.7 per violation; competition ×0.9 per violation.'},
+{t:'dev',lv:'B',l:'d2',q:'Which material makes your device untestable?',o:['Fiberglass or mineral wool','Foam board','Aluminum foil','Cardboard'],a:0,e:'Hazardous materials (asbestos, mineral wool, fiberglass): written test only.'},
+{t:'dev',lv:'B',l:'d4',q:'The lamp mainly heats your cup by…',o:['radiation','conduction through the table','latent heat','sublimation'],a:0,e:'Light and infrared radiation. So collect radiation and block heat loss.'},
+{t:'dev',lv:'B',l:'d3',n:1,q:'Actual final temp was 38.0 °C, you predicted 36.1 °C. What is your PE (prediction estimate)? Give a decimal.',a:0.95,tol:0.01,u:'',h:['PE = 1 - |final - predicted| ÷ final','|38.0 - 36.1| = 1.9','1.9 ÷ 38.0 = 0.05','PE = 1 - 0.05 = 0.95'],e:'0.95'},
+{t:'dev',lv:'B',l:'d3',n:1,q:'Your temperature gain was 14 °C and the best team’s was 20 °C. What is your TS (out of 30)?',a:21,tol:0.2,u:'pts',h:['TS = (your gain ÷ best gain) x 30','14 ÷ 20 = 0.7','0.7 x 30 = 21'],e:'21 points'},
+// ---- C extras ----
+{t:'rad',lv:'C',l:'c1',q:'A blackbody is…',o:['an ideal absorber and emitter of radiation','a black painted object','a cold object','a perfect reflector'],a:0,e:'It absorbs everything and emits the maximum for its temperature.'},
+{t:'rad',lv:'C',l:'c1',q:'Radiant exitance is…',o:['power emitted per unit area','total energy of a gas','temperature gradient','heat capacity per mass'],a:0,e:'Units W/m².'},
+{t:'rad',lv:'C',l:'c2',q:'If you DOUBLE an object’s Kelvin temperature, the power it radiates goes up by…',o:['16 times','2 times','4 times','8 times'],a:0,e:'Stefan-Boltzmann: T to the 4th, and 2 x 2 x 2 x 2 = 16.'},
+{t:'rad',lv:'C',l:'c4',q:'The third law of thermodynamics says…',o:['entropy approaches a minimum as T approaches 0 K, and 0 K cannot be reached','entropy is infinite at 0 K','heat flows cold to hot','energy is conserved'],a:0,e:'Absolute zero is unreachable in a finite number of steps.'},
+{t:'rad',lv:'C',l:'c3',q:'Planck is known for…',o:['energy quanta to explain blackbody radiation','the ideal gas law','the first law','latent heat'],a:0,e:'Planck, 1900.'},
+{t:'rad',lv:'C',l:'c3',q:'As an object gets hotter, the color/wavelength it glows at moves toward…',o:['shorter wavelengths (bluer)','longer wavelengths (redder)','no change','only infrared'],a:0,e:'Wien’s law: hotter = shorter peak wavelength.'},
+{t:'proc',lv:'C',l:'r5',q:'Can a heat engine be 80% efficient between reservoirs at 300 K and 1000 K?',o:['No, the Carnot limit is 70%','Yes','Only if it is isothermal','Only with a vacuum'],a:0,e:'Limit = 1 - 300/1000 = 0.70.'},
+{t:'proc',lv:'C',l:'r4',q:'Melting ice in a warm room makes the ice’s entropy…',o:['increase','decrease','stay the same','become zero'],a:0,e:'Liquid is more spread out than solid, so entropy rises.'},
+{t:'proc',lv:'C',l:'r2',q:'In ΔU = Q - W, what does W stand for?',o:['work done BY the system','heat lost','weight','watts'],a:0,e:'Heat in minus work out gives the change in internal energy.'},
+{t:'proc',lv:'C',l:'r5',n:1,q:'Maximum (Carnot) efficiency between 300 K and 600 K, in %?',a:50,tol:0.5,u:'%',h:['Max efficiency = 1 - Tcold ÷ Thot','300 ÷ 600 = 0.5','1 - 0.5 = 0.5 = 50%'],e:'50% (always use Kelvin)'},
+{t:'proc',lv:'C',l:'r2',n:1,q:'A gas takes in 500 J of heat and does 200 J of work. What is the change in internal energy (J)?',a:300,tol:0.5,u:'J',h:['ΔU = Q - W','500 - 200 = 300'],e:'300 J'},
+{t:'rad',lv:'C',l:'c2',n:1,q:'A blackbody at 500 K: radiant exitance in W/m²? (σ = 5.67e-8)',a:3544,tol:10,u:'W/m²',h:['Exitance = σ x T⁴','500⁴ = 500x500x500x500 = 6.25e10','5.67e-8 x 6.25e10 = 3544'],e:'3544 W/m² (use the Stefan-Boltzmann calculator)'},
+{t:'phase',lv:'C',l:'p4',n:1,q:'Volume (in liters) of 1 mole of ideal gas at 300 K and 100 kPa? (R = 8.314)',a:24.9,tol:0.2,u:'L',h:['V = nRT ÷ p','1 x 8.314 x 300 = 2494 J','2494 ÷ 100000 Pa = 0.02494 m³','x 1000 = 24.9 L'],e:'24.9 L'},
+{t:'heat',lv:'C',l:'h5',n:1,q:'Silicon chip: 5 W flows through, thickness 1 mm, area 5mm x 5mm, k = 200 W/(m K). Temperature difference (K)? (ΔT = Q L ÷ (k A))',a:1,tol:0.05,u:'K',h:['Convert: L = 0.001 m, A = 0.005 x 0.005 = 2.5e-5 m²','k x A = 200 x 2.5e-5 = 0.005','Q x L = 5 x 0.001 = 0.005','0.005 ÷ 0.005 = 1 K'],e:'1 K'},
+{t:'heat',lv:'C',l:'h6',n:1,q:'4 kg water at 25 °C mixes with 2 kg ice at 0 °C. How many kg of ice melt? (c = 4186 J/kg K; fusion = 334000 J/kg)',a:1.25,tol:0.03,u:'kg',h:['Energy water can give up cooling to 0 °C: 4 x 4186 x 25 = 418,600 J','Melting ALL the ice would need 2 x 334,000 = 668,000 J: not enough','So ice melted = 418,600 ÷ 334,000 = 1.25 kg, final temp stays 0 °C'],e:'1.25 kg melts; some ice is left, final 0 °C'},
+{t:'rad',lv:'C',l:'c5',n:1,q:'Irradiance on a surface 2 m from a 60 W point source? (spread over a sphere: 4 × π × r²) in W/m²',a:1.19,tol:0.02,u:'W/m²',h:['Sphere area = 4 x 3.1416 x 2² = 50.27 m²','60 ÷ 50.27 = 1.19 W/m²'],e:'1.19 W/m²'},
+{t:'sys',lv:'B',l:'s1',q:'A bathtub of warm water and a cup of hot coffee: which has MORE heat energy?',o:['The bathtub','The coffee','They are equal','Neither has heat'],a:0,e:'Much more water means much more energy, even though the coffee is hotter.'},
+{t:'sys',lv:'B',l:'s2',q:'A perfectly sealed, perfect thermos is an example of a(n)…',o:['isolated system','open system','closed system','heat engine'],a:0,e:'Nothing (matter or energy) crosses the boundary.'},
+{t:'sys',lv:'B',l:'s3',q:'Which property is EXTENSIVE?',o:['Mass','Density','Temperature','Pressure'],a:0,e:'Cut it in half and the mass halves. Density, temperature and pressure do not.'},
+{t:'phase',lv:'B',l:'p1',q:'Frost forming on a cold window (water vapor straight to ice) is…',o:['Deposition','Sublimation','Melting','Boiling'],a:0,e:'Gas straight to solid = deposition.'},
+{t:'phase',lv:'B',l:'p3',q:'On a phase diagram, a LINE between two regions shows…',o:['where two phases coexist','where the gas is hottest','melting of metals only','nothing'],a:0,e:'Lines = two phases in balance. The triple point is where the lines meet.'},
+{t:'proc',lv:'B',l:'r1',q:'An isobaric process happens at constant…',o:['pressure','temperature','volume','mass'],a:0,e:'Baro = pressure.'},
+{t:'proc',lv:'B',l:'r3',q:'Heat flowing by itself from a cold object to a hot object…',o:['does not happen (second law)','happens in every fridge for free','happens only in space','is the first law'],a:0,e:'A fridge needs work (power) to push heat uphill.'},
+{t:'dev',lv:'B',l:'d4',q:'Which surface best absorbs lamp radiation?',o:['Dark matte','Shiny silver','Clear glass','White gloss'],a:0,e:'Dark matte absorbs; shiny and white reflect.'},
+{t:'heat',lv:'C',l:'h5',q:'You make an insulating wall thicker (same area, material and heat flow). The temperature difference across it…',o:['gets bigger','gets smaller','stays the same','becomes zero'],a:0,e:'ΔT = QL ÷ (kA): bigger L means bigger ΔT.'},
+{t:'heat',lv:'C',l:'h6',q:'Hot water meets ice. What should you check FIRST?',o:['Whether the hot water can melt ALL the ice','The color of the ice','The pressure of the room','The wattage of the lamp'],a:0,e:'Compare energy available (cooling to 0 °C) with energy needed to melt all the ice.'},
+{t:'rad',lv:'C',l:'c5',q:'You move twice as far from a lamp. The light hitting a surface becomes…',o:['one quarter as strong','half as strong','the same','twice as strong'],a:0,e:'Inverse square: 2 x 2 = 4, so one quarter.'}
+];
+// ---------- STATE ----------
+let tab='B',sub={B:'path',C:'path',T:'start'},quiz=null;
+function store(){try{return JSON.parse(localStorage.getItem('thermo_stats')||'{}')}catch(e){return {}}}
+function save(o){try{localStorage.setItem('thermo_stats',JSON.stringify(o))}catch(e){}}
+function logs(){try{return JSON.parse(localStorage.getItem('thermo_log')||'[]')}catch(e){return []}}
+function saveLogs(l){try{localStorage.setItem('thermo_log',JSON.stringify(l))}catch(e){}}
+const RANKS=[[0,'Rookie'],[100,'Heat Seeker'],[300,'Thermo Whiz'],[600,'Carnot Champ'],[1000,'Entropy Master']];
+function showXP(){const e=$('#xp');if(!e)return;const x=store().xp||0;let r=0;RANKS.forEach((a,i)=>{if(x>=a[0])r=i});const nx=RANKS[r+1];const pct=nx?Math.round(100*(x-RANKS[r][0])/(nx[0]-RANKS[r][0])):100;e.innerHTML='<b>'+RANKS[r][1]+'</b> &middot; '+x+' XP'+(nx?' &middot; '+(nx[0]-x)+' to '+nx[1]:' &middot; max rank!')+'<div class="xpbar"><i style="width:'+pct+'%"></i></div>';}
+function nav(){if(tab==='T'&&!teachOk()){tab='B'}showXP();
+ $('#tabs').innerHTML=[['B','Division B'],['C','Division C'],['T','Teach: B vs C']].filter(x=>x[0]!=='T'||teachOk()).map(([k,n])=>`<button class="tab ${k} ${tab===k?'on':''}" onclick="tab='${k}';quiz=null;clearInterval(window.GT);G=null;render()">${n}</button>`).join('');
+ const subs=tab==='T'?[['start','Start here (coach)'],['B','Teach Division B'],['C','Teach Division C'],['D','B vs C differences'],['S','Songs & my checklist'],['F','Feel it + drill']].concat(ROLE==='coach'?[['students','Students (progress)']]:[]):[['path','Start here'],['vids','Videos'],['learn','Learn'],['games','Games'],['quiz','Quiz'],['tools','Calculators'],['feel','Picture drill'],['formula','Formula a day'],['demos','Hands-on'],['exps','Experiments'],['songs','Songs'],['dev','Device & log']];
+ $('#subtabs').innerHTML=subs.map(([k,n])=>`<button class="st ${sub[tab]===k?'on':''}" onclick="sub[tab]='${k}';quiz=null;render()">${n}</button>`).join('');
+}
+function render(){if(sub[tab]!=='games'&&G){clearInterval(window.GT);G=null}nav();const v=$('#view');
+ if(tab==='T')v.innerHTML=teach(sub.T);else if(sub[tab]==='path')v.innerHTML=tasksCard()+path(tab);else if(sub[tab]==='vids')v.innerHTML=vids(tab);else if(sub[tab]==='games')v.innerHTML=games(tab);else if(sub[tab]==='learn')v.innerHTML=learn(tab);else if(sub[tab]==='quiz')quizView(tab);else if(sub[tab]==='tools')v.innerHTML=tools(tab);else if(sub[tab]==='songs')v.innerHTML=songsStudent(tab);else if(sub[tab]==='feel')v.innerHTML=feel(false,tab);else if(sub[tab]==='formula')v.innerHTML=formulaView();else if(sub[tab]==='demos')v.innerHTML=demosView();else if(sub[tab]==='exps')v.innerHTML=expView(tab);else v.innerHTML=device();
+ if(sub[tab]==='tools'&&tab!=='T')calcInit();
+ if((tab==='T'&&sub.T==='F')||(tab!=='T'&&sub[tab]==='feel')){planPaint();feelNext();}if(tab!=='T'&&sub[tab]==='formula'){fmInit();habPaint();}if(tab!=='T'&&sub[tab]==='demos')demoInit();if(tab==='T'&&sub.T==='students')renderStudents();}
+function topicsFor(d){return d==='B'?['sys','phase','heat','proc','hist','dev']:['sys','phase','heat','proc','hist','rad','dev'];}
+function shufQ(q){if(!q.o||(q.o.length===2&&q.o[0]==='True'))return q;const idx=q.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return {...q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a)};}
+function lq(d,id){return Q.filter(q=>q.l===id&&(d==='C'||q.lv==='B'));}
+function learn(d){const st=store();
+ let h=d==='C'?'<div class="tip"><b>Division C = everything in B, plus</b> the purple C lessons and the C add-on boxes. Do the B lessons first.</div>':'<div class="tip"><b>How to use this:</b> open a lesson, read the short steps, say the "Remember" line out loud, then hit <b>Quick check</b>. Every quiz question comes from one of these lessons.</div>';
+ for(const k of topicsFor(d)){h+=`<h2 class="th">${TOPICS[k]}</h2>`;
+  LESSONS.filter(l=>l.t===k&&(d==='C'||!l.c)).forEach(l=>{const n=lq(d,l.id).length;const s=st[d+'L'+l.id]||{r:0,n:0};const acc=s.n?Math.round(100*s.r/s.n):null;
+   h+=`<details class="card les"><summary><span class="ic">${l.i}</span> <b>${l.n}</b>${l.c?'<span class="pill cp">C</span>':''}${acc!==null&&acc>=80?' ✅':''}</summary>
+   <div class="hook">${l.hook}</div><ol>${l.st.map(x=>`<li>${x}</li>`).join('')}</ol>
+   ${l.cx&&d==='C'?'<div class="cx"><b>Division C add-on</b><ol>'+l.cx.map(x=>`<li>${x}</li>`).join('')+'</ol></div>':''}
+   ${l.ex?`<div class="try"><b>Try it:</b> ${l.ex.q}<ol>${l.ex.st.map(x=>`<li>${x}</li>`).join('')}</ol></div>`:''}
+   <div class="mem">🧠 <b>Remember:</b> ${l.mem}</div>
+   <div class="row"><button class="btn" onclick="startLesson('${d}','${l.id}')">Quick check (${n} question${n===1?'':'s'})</button><span class="small">${acc===null?'not tried':'best: '+acc+'%'}</span></div></details>`;});
+  const vl=vlinks(k);if(vl)h+=`<details class="card"><summary><b>▶ Videos for this topic</b></summary><ul>${vl}</ul></details>`;}
+ return h;}
+function startLesson(d,id){const l=lq(d,id).map(x=>shufQ({...x,s:Math.random()})).sort((a,b)=>a.s-b.s);if(!l.length)return;quiz={d,list:l,i:0,score:0,miss:[],done:false};sub[d]='quiz';render();}
+
+// ---------- START HERE PATH ----------
+const YT=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const V=(id,t)=>[t,'https://www.youtube.com/watch?v='+id,id];
+const VID={
+ heat:[V('tuSC0ObB-qY','Crash Course Physics #22: The Physics of Heat (9 min)'),V('YK7G6l_K6sA','Crash Course Engineering #14: Heat Transfer (9 min)')],
+ temp:[V('6BHbJ_gBOk0','Crash Course Physics #20: Temperature (9 min)')],
+ laws:[V('4i1MUWJoI0U','Crash Course Physics #23: Thermodynamics (10 min)'),V('f1OokOgtcqg','Khan Academy: First and second laws (12 min)'),V('xJf6pHqLzs0','Khan Academy: Entropy intuition (19 min)')],
+ sp:[V('yhNHJ7WdT8A','Professor Dave: Heat capacity, specific heat, calorimetry (4 min)'),V('LpOIZFZ5mgw','chemistNATE: Using q = mcΔT, three examples (7 min)')],
+ ph:[V('oc0ypeDELb0','Professor Dave: Phase changes, latent heat, phase diagrams (5 min)'),V('8VmkdzRE8sQ','FuseSchool: Specific latent heat (4 min)')],
+ rad:[V('EWqzg0iqNtw','Physics Made Easy: What is a black body? Stefan-Boltzmann (8 min)'),V('AMwzCDTW82M','The Stefan-Boltzmann law (4 min)'),V('7BXvc9W97iU','Professor Dave: Blackbody radiation (7 min)')],
+ carnot:[V('ELR1Hx4qymo','Carnot cycle, easy and basic (4 min)'),V('Qi3m9sD5w-A','Organic Chemistry Tutor: Carnot cycle and max efficiency (20 min)')],
+ so:[V('P6_xTDoAIQg','NC Science Olympiad: Thermodynamics event 2019 (3 min; older insulating rules)'),V('XqPtKzNbP8A','NC Science Olympiad: Impound at the Thermodynamics event (1 min)'),V('2gGfU51pPgs','NC Science Olympiad: Thermodynamics 2018 (12 min; older rules)')]
+};
+function vitem(x){const id=x[2];return `<li>▶ <a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a> <button class="ghost" onclick="playV(this,'${id}')">Play here</button><div></div></li>`;}
+function playV(b,id){const d=b.nextElementSibling;if(d.innerHTML){d.innerHTML='';b.textContent='Play here';return}d.innerHTML=`<iframe width="100%" style="max-width:560px;aspect-ratio:16/9;border:0;margin-top:6px" src="https://www.youtube-nocookie.com/embed/${id}" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen></iframe><div class="small">If it says unavailable, use the title link to open it on YouTube.</div>`;b.textContent='Hide';}
+const LEVELS=[
+ {n:1,t:'Level 1: What are heat and temperature?',topic:'sys',mode:'mc',why:'No math. Learn the vocabulary: system, temperature vs heat, units, zeroth law.',v:['heat','temp']},
+ {n:2,t:'Level 2: How heat moves',topic:'heat',mode:'mc',why:'Conduction, convection, radiation, insulators, specific heat in words. This is the heart of your device.',v:['heat','sp']},
+ {n:3,t:'Level 3: Phases and gases',topic:'phase',mode:'mc',why:'Melting, boiling, latent heat, phase diagrams, pV=nRT in plain English.',v:['ph','temp']},
+ {n:4,t:'Level 4: The laws and engines',topic:'proc',mode:'mc',why:'Zeroth, first and second laws, process words, efficiency, entropy in words. (The third law is a Division C topic.)',v:['laws','carnot']},
+ {n:5,t:'Level 5: Who did what (history)',topic:'hist',mode:'mc',why:'Memory-hook names. Easy points on the test.',v:[]},
+ {n:6,t:'Level 6: Device rules and scoring',topic:'dev',mode:'any',why:'What you can build, what costs points, how the prediction is scored. Includes your first easy number problems.',v:['so']},
+ {n:7,t:'Level 7: Easy number problems',topic:'all',mode:'num',why:'Number problems with steps and hints; use the calculators tab.',v:['sp']},
+ {n:8,t:'Level 8 (Division C): Radiation and harder problems',topic:'rad',mode:'any',why:'Blackbody, Stefan-Boltzmann (T to the 4th), third law, plus multi-step problems.',v:['rad','carnot'],c:1}
+];
+function numAcc(d){const s=store()[d+'num'];return s&&s.n?Math.round(100*s.r/s.n):null;}
+function levelAcc(d,topic){const st=store();const ks=topic==='all'?topicsFor(d):[topic];let r=0,n=0;ks.forEach(k=>{const s=st[d+k];if(s){r+=s.r;n+=s.n}});return n?Math.round(100*r/n):null;}
+function path(d){let prev=true;
+ let h='<div class="tip"><b>Go in order.</b> Each level: read the Learn card, watch a short video, then take its quiz. When you hit about 80%, move on. Levels unlock a green check at 80%.</div>';
+ for(const L of LEVELS){if(L.c&&d==='B')continue;
+  const a=L.mode==='num'?numAcc(d):levelAcc(d,L.topic);const ok=a!==null&&a>=80;
+  h+=`<div class="card"><h3>${ok?'\u2705 ':''}${L.t}</h3><div>${L.why}</div>${L.topic!=='all'?'<div class="small">Lessons in this level: '+LESSONS.filter(l=>l.t===L.topic&&(d==='C'||!l.c)).map(l=>l.i+' '+l.n).join(' \u2022 ')+'</div>':''}
+  ${L.v.length?'<ul>'+L.v.flatMap(k=>VID[k]).map(vitem).join('')+'</ul>':''}
+  <div class="row"><button class="btn" onclick="startLevel('${d}','${L.topic}','${L.mode}')">Start Level ${L.n} quiz</button><button class="ghost" onclick="sub['${d}']='learn';render()">Read the cards</button><span class="small">${a===null?'not tried':'best so far: '+a+'%'}</span></div></div>`;}
+ h+='<p class="small">Videos are real YouTube videos. Click Play here to watch inside the app, or the title to open YouTube.</p>';
+ return h;}
+function startLevel(d,topic,mode){sub[d]='quiz';render();$('#qt').value=topic;$('#qm').value=mode;startQuiz(d);}
+
+
+// ---------- VIDEOS ----------
+const TV={sys:['heat','temp'],heat:['heat','sp'],phase:['ph','temp'],proc:['laws','carnot'],hist:[],dev:['so'],rad:['rad','carnot']};
+function vlinks(k){return (TV[k]||[]).flatMap(x=>VID[x]).map(vitem).join('');}
+function vids(d){let h='<div class="tip">All videos for '+(d==='C'?'Division C (B topics plus radiation)':'Division B')+', grouped by topic. Links open in a new tab.</div>';
+ for(const k of topicsFor(d)){const l=vlinks(k);h+=`<div class="card"><h3>${TOPICS[k]}</h3>${l?'<ul>'+l+'</ul>':'<div class="small">No video for this topic. Use the flashcard-style quiz instead.</div>'}</div>`;}
+ return h;}
+
+// ---------- FORMULA GAMES ----------
+const OPS=['=','×','÷','+','−','(',')'];
+const FORM=[
+{n:'Heat needed',p:['Q','=','m','×','c','×','ΔT'],k:'Q = heat (J), m = mass, c = specific heat, ΔT = temperature change',mem:'Mass × stubbornness × change'},
+{n:'Celsius to Kelvin',p:['K','=','°C','+','273.15'],k:'K = kelvin',mem:'Just add 273.15'},
+{n:'Fahrenheit to Celsius',p:['°C','=','(','°F','−','32',')','×','5/9'],k:'subtract 32 first',mem:'Minus 32, times 5/9'},
+{n:'Engine efficiency',p:['η','=','W','÷','Qin'],k:'η = efficiency, W = work out, Qin = heat in',mem:'What you get ÷ what you put in'},
+{n:'Temperature score',p:['TS','=','(','gain','÷','best gain',')','×','30'],k:'your gain over the best gain, times 30',mem:'Gain big'},
+{n:'Prediction estimate',p:['PE','=','1','−','|final − predicted|','÷','final'],k:'closer guess = closer to 1',mem:'Guess close'},
+{n:'First law',p:['ΔU','=','Q','−','W'],k:'Q = heat in, W = work done by the system',mem:'In minus out = kept'},
+{n:'Ideal gas law',p:['p','×','V','=','n','×','R','×','T'],k:'pressure, volume, moles, R, temperature (kelvin)',mem:'pV = nRT',},
+{n:'Carnot limit',c:1,p:['η','=','1','−','Tcold','÷','Thot'],k:'temperatures in kelvin',mem:'1 minus cold over hot'},
+{n:'Stefan–Boltzmann',c:1,p:['j','=','σ','×','T⁴'],k:'j = exitance (W/m²), T in kelvin',mem:'Sigma T to the 4th'},
+{n:'Irradiance from a lamp',c:1,p:['E','=','P','÷','(','4','×','π','×','r²',')'],k:'power spread over a sphere',mem:'Power over sphere area'},
+{n:'Conduction temperature difference',c:1,p:['ΔT','=','Q','×','L','÷','(','k','×','A',')'],k:'L = thickness, k = conductivity, A = area',mem:'Thick walls = big ΔT'}
+];
+let G=null;
+function fsel(d){return FORM.filter(f=>d==='C'||!f.c);}
+function sh(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+function fstr(f){return f.p.join(' ');}
+function addXP(n){const st=store();st.xp=(st.xp||0)+n;save(st);showXP();}
+function games(d){
+ if(!G)return `<div class="tip">Four quick games to lock in the formulas. Win XP while you play.</div>
+ <div class="card"><h3>🎴 Match-up</h3><div>Tap a name, then tap its formula.</div><p><button class="btn" onclick="gMatch('${d}')">Play</button></p></div>
+ <div class="card"><h3>🕳️ Fill the gap</h3><div>One piece is missing. Pick it.</div><p><button class="btn" onclick="gGap('${d}',10)">Play (10 rounds)</button></p></div>
+ <div class="card"><h3>🧩 Build it</h3><div>Tap the pieces in the right order.</div><p><button class="btn" onclick="gBuild('${d}')">Play</button></p></div>
+ <div class="card"><h3>⏱️ Speed round</h3><div>60 seconds of fill-the-gap. Beat your best!</div><p><button class="btn" onclick="gSpeed('${d}')">Play</button> <span class="small">best: ${store().best||0}</span></p></div>
+ <div class="card"><h3>📒 Formula cheat sheet</h3><ul>${fsel(d).map(f=>`<li><b>${f.n}:</b> ${fstr(f)}<div class="small">${f.k} &middot; ${f.mem}</div></li>`).join('')}</ul></div>`;
+ return gView(d);}
+function gEnd(){clearInterval(window.GT);G=null;render();}
+function gTop(){return '<p><button class="ghost" onclick="gEnd()">← Games menu</button></p>';}
+function gView(d){
+ if(G.m==='match'){const h=G;if(!h.left)return gTop()+`<div class="card"><h3>\ud83c\udf89 All matched!</h3><div>Misses: ${h.miss}</div><p><button class="btn" onclick="gMatch('${h.d}')">Play again</button></p></div>`;return gTop()+`<div class="card"><h3>🎴 Match-up</h3><div class="small">Misses: ${h.miss} &middot; Left: ${h.left}</div><div class="row" style="align-items:flex-start"><div style="flex:1;min-width:200px">${h.names.map((f,i)=>f.done?'':`<button class="opt ${h.selN===f?'ok':''}" onclick="mTap('n',${i})">${f.n}</button>`).join('')}</div><div style="flex:1;min-width:200px">${h.forms.map((f,i)=>f.done?'':`<button class="opt ${h.selF===f?'ok':''}" onclick="mTap('f',${i})">${fstr(f)}</button>`).join('')}</div></div></div>`;}
+ if(G.m==='gap'||G.m==='speed'){if(G.i>=G.n||G.over)return gTop()+`<div class="card"><h3>${G.m==='speed'?'Time!':'Done'}: ${G.score} ${G.m==='speed'?'correct':'/ '+G.n}</h3>${G.m==='speed'&&G.newBest?'<p>🎉 New best!</p>':''}<button class="btn" onclick="${G.m==='speed'?`gSpeed('${G.d}')`:`gGap('${G.d}',10)`}">Play again</button></div>`;
+  const r=G.q;return gTop()+`<div class="card"><div class="small">${G.m==='speed'?'Time left: <b id="gt">'+G.t+'</b>s &middot; ':''}Score ${G.score}${G.m==='gap'?' &middot; Round '+(G.i+1)+'/'+G.n:''}</div><h3>${r.f.n}</h3><div style="font-size:22px;margin:8px 0">${r.f.p.map((x,i)=>i===r.b?'<b style="color:var(--acc)">[ ? ]</b>':x).join(' ')}</div>${r.o.map((o,i)=>`<button class="opt" onclick="gPick(${i})">${o}</button>`).join('')}<div id="gfb"></div></div>`;}
+ if(G.m==='build'){const f=G.f;return gTop()+`<div class="card"><h3>🧩 Build: ${f.n}</h3><div class="small">${f.k}</div><div style="font-size:22px;margin:10px 0;min-height:34px">${f.p.slice(0,G.pos).join(' ')} <span style="color:var(--mut)">${G.pos<f.p.length?'…':''}</span></div>${G.pos>=f.p.length?`<div class="fb ok">🔥 Built! +10 XP. ${f.mem}</div><p><button class="btn" onclick="gBuild('${G.d}')">Next formula</button></p>`:G.tiles.map((t,i)=>t===null?'':`<button class="opt" style="display:inline-block;width:auto;margin:4px" onclick="bTap(${i})">${t}</button>`).join('')}<div class="small">Misses: ${G.miss}</div></div>`;}
+}
+function mkGap(d){const f=sh(fsel(d))[0];const idx=f.p.map((x,i)=>OPS.includes(x)?-1:i).filter(i=>i>=0);const b=idx[Math.floor(Math.random()*idx.length)];const ans=f.p[b];
+ let lo=b,hi=b;while(lo>0&&f.p[lo-1]==='\u00d7'&&!OPS.includes(f.p[lo-2]))lo-=2;while(hi<f.p.length-1&&f.p[hi+1]==='\u00d7'&&!OPS.includes(f.p[hi+2]))hi+=2;const chain=f.p.slice(lo,hi+1);
+ const pool=[...new Set(fsel(d).flatMap(x=>x.p).filter(x=>!OPS.includes(x)&&x!==ans&&!chain.includes(x)))];const o=sh([ans,...sh(pool).slice(0,3)]);return {f,b,ans,o};}
+function gMatch(d){const f=sh(fsel(d)).slice(0,5).map(x=>({...x}));G={m:'match',d,names:sh(f),forms:sh(f),selN:null,selF:null,miss:0,left:f.length};render();}
+function mTap(side,i){const f=(side==='n'?G.names:G.forms)[i];if(side==='n')G.selN=f;else G.selF=f;
+ if(G.selN&&G.selF){if(G.selN.n===G.selF.n){G.selN.done=G.selF.done=true;G.left--;addXP(5);G.selN=G.selF=null;}else{G.miss++;G.selN=G.selF=null;}}
+ render();}
+function gGap(d,n){G={m:'gap',d,i:0,n,score:0,q:mkGap(d)};render();}
+function gPick(i){if(G.locked)return;G.locked=true;const ok=G.q.o[i]===G.q.ans;if(ok){G.score++;addXP(G.m==='speed'?2:5)}
+ if(G.m==='speed'){G.locked=false;G.q=mkGap(G.d);G.i++;render();return}
+ $('#gfb').innerHTML=`<div class="fb ${ok?'ok':'bad'}">${ok?'🔥 Yes! ':'It was <b>'+G.q.ans+'</b>. '}${fstr(G.q.f)}</div><p><button class="btn" onclick="G.locked=false;G.i++;G.q=mkGap(G.d);render()">Next</button></p>`;}
+function gSpeed(d){clearInterval(window.GT);G={m:'speed',d,i:0,n:9999,score:0,t:60,q:mkGap(d)};render();window.GT=setInterval(()=>{if(!G||G.m!=='speed'){clearInterval(window.GT);return}G.t--;const e=document.getElementById('gt');if(e)e.textContent=G.t;if(G.t<=0){clearInterval(window.GT);const st=store();G.newBest=G.score>(st.best||0);if(G.newBest){st.best=G.score;save(st)}G.over=true;render()}},1000);}
+function gBuild(d){const f=sh(fsel(d))[0];G={m:'build',d,f,pos:0,tiles:sh(f.p),miss:0};render();}
+function bTap(i){const f=G.f;if(G.tiles[i]===f.p[G.pos]){G.tiles[i]=null;G.pos++;if(G.pos>=f.p.length)addXP(10);}else G.miss++;render();}
+
+// ---------- QUIZ ----------
+function pool(d,topic){return Q.filter(q=>(d==='C'||q.lv==='B')&&(topic==='all'||q.t===topic));}
+function quizView(d){
+ const v=$('#view');
+ if(!quiz){const st=store();
+  v.innerHTML=`<div class="card"><h3>Start a quiz</h3><div class="row"><select id="qt"><option value="all">All topics (${pool(d,'all').length} questions)</option>${topicsFor(d).map(k=>`<option value="${k}">${TOPICS[k]} (${pool(d,k).length})</option>`).join('')}</select>
+  <select id="qm"><option value="any">All question types</option><option value="mc">Multiple choice only (no math)</option><option value="num">Number problems only</option></select>
+  <button class="btn" onclick="startQuiz('${d}')">Start</button></div></div>`;return;}
+ if(quiz.i>=quiz.list.length){v.innerHTML=`<div class="card"><h3>Done: ${quiz.score}/${quiz.list.length}</h3><p>${quiz.score===quiz.list.length?'Perfect run!':'Retake the quiz or revisit the Learn tab for the topics you missed.'}</p>${quiz.miss.length?'<b>Missed:</b><ul>'+quiz.miss.map(m=>`<li>${m}</li>`).join('')+'</ul>':''}<button class="btn" onclick="quiz=null;render()">New quiz</button> <button class="ghost" onclick="sub[tab]='learn';quiz=null;render()">Back to lessons</button></div>`;return;}
+ const q=quiz.list[quiz.i];let h=`<div class="card"><div class="small">Question ${quiz.i+1} of ${quiz.list.length} &middot; ${TOPICS[q.t]} &middot; score ${quiz.score}</div><h3>${q.q}</h3>`;
+ if(q.n){h+=`<div class="row"><input id="ans" type="number" step="any" placeholder="your answer"> <span>${q.u}</span><button class="btn" onclick="answerNum()">Check</button><button class="ghost" onclick="hint()">Hint / steps</button></div><div id="hint"></div>`;}
+ else h+=q.o.map((o,i)=>`<button class="opt" onclick="answerMC(${i})">${'ABCDE'[i]}. ${o}</button>`).join('');
+ h+='<div id="fb"></div></div>';v.innerHTML=h;const an=$('#ans');if(an){an.onkeydown=e=>{if(e.key==='Enter')answerNum()};an.focus&&an.focus();}}
+function startQuiz(d){let l=pool(d,$('#qt').value);const m=$('#qm').value;if(m==='mc')l=l.filter(q=>!q.n);if(m==='num')l=l.filter(q=>q.n);
+ if(!l.length){$('#view').insertAdjacentHTML('beforeend','<div class="tip">No questions for that choice.</div>');return}
+ l=l.map(x=>shufQ({...x,s:Math.random()})).sort((a,b)=>a.s-b.s).slice(0,15);quiz={d,list:l,i:0,score:0,miss:[],done:false};render();}
+function record(q,ok){const st=store();for(const k of [quiz.d+q.t,quiz.d+'L'+q.l].concat(q.n?[quiz.d+'num']:[])){st[k]=st[k]||{r:0,n:0};st[k].n++;if(ok)st[k].r++;}if(ok)st.xp=(st.xp||0)+10;save(st);if(ok)quiz.score++;else quiz.miss.push(q.q);showXP();}
+const GOOD=['\ud83d\udd25 Nailed it!','\u26a1 Boom!','\ud83c\udfaf Right on target!','\ud83e\udde0 Big brain!','\ud83d\ude80 Heat hero!'],BAD=['\ud83d\udee0\ufe0f Not quite.','\ud83d\udca1 Close!','\ud83d\udd01 Almost. Learn it and come back.'];
+function finish(ok,msg){const q=quiz.list[quiz.i];const ls=LES[q.l];const arr=ok?GOOD:BAD;$('#fb').innerHTML=`<div class="fb ${ok?'ok':'bad'}"><b>${arr[Math.floor(Math.random()*arr.length)]}</b> ${ok?'+10 XP. ':''}${msg}${ok||!ls?'':'<div class="small">Review: lesson "'+ls.n+'" in Learn.</div>'}</div><p><button class="btn" onclick="quiz.locked=false;quiz.i++;render()">Next</button></p>`;}
+function answerMC(i){if(quiz.locked)return;quiz.locked=true;const q=quiz.list[quiz.i];const ok=i===q.a;
+ document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===i)b.classList.add('bad');});record(q,ok);finish(ok,q.e);}
+function answerNum(){if(quiz.locked)return;const q=quiz.list[quiz.i];const x=parseFloat($('#ans').value);if(isNaN(x)){$('#fb').innerHTML='<div class="fb bad">Type a number first.</div>';return}quiz.locked=true;const ok=Math.abs(x-q.a)<=q.tol;record(q,ok);
+ finish(ok,(ok?'':'Answer: ')+q.e+'<br><span class="small">Steps: '+q.h.join(' &rarr; ')+'</span>');}
+function hint(){const q=quiz.list[quiz.i];$('#hint').innerHTML='<div class="tip">'+q.h.map((s,i)=>`<div>Step ${i+1}: ${s}</div>`).join('')+'</div>';}
+// ---------- CALCULATORS ----------
+function tools(d){
+ let h=`<div class="tip">Fill the boxes, press nothing: results and steps appear as you type.</div>
+ <div class="card"><h3>Temperature converter</h3><div class="row"><input type="number" id="tc_v" placeholder="value"><select id="tc_u"><option value="C">&deg;C</option><option value="F">&deg;F</option><option value="K">K</option></select></div><div id="tc_o" class="res">&hellip;</div></div>
+ <div class="card"><h3>Heat needed: Q = m &times; c &times; &Delta;T</h3><div class="row"><input type="number" id="q_m" placeholder="mass (g)" value="100"><input type="number" id="q_c" placeholder="c (J/g&deg;C)" value="4.186"><input type="number" id="q_a" placeholder="start &deg;C"><input type="number" id="q_b" placeholder="end &deg;C"></div><div id="q_o" class="res">&hellip;</div></div>
+ <div class="card"><h3>Scores</h3><div class="row"><input type="number" id="s_g" placeholder="your temp gain &deg;C"><input type="number" id="s_h" placeholder="best gain &deg;C"><input type="number" id="s_f" placeholder="actual final &deg;C"><input type="number" id="s_p" placeholder="your predicted &deg;C"></div><div id="s_o" class="res">&hellip;</div></div>
+ <div class="card"><h3>Engine efficiency</h3><div class="row"><input type="number" id="e_w" placeholder="work out (J)"><input type="number" id="e_q" placeholder="heat in (J)"><input type="number" id="e_th" placeholder="T hot (K)"><input type="number" id="e_tc" placeholder="T cold (K)"></div><div id="e_o" class="res">&hellip;</div></div>`;
+ if(d==='C')h+=`<div class="card"><h3>Stefan&ndash;Boltzmann (C)</h3><div class="row"><input type="number" id="sb_t" placeholder="temperature (K)"><input type="number" id="sb_a" placeholder="area (m&sup2;, optional)"></div><div id="sb_o" class="res">&hellip;</div></div>
+ <div class="card"><h3>Ideal gas pV = nRT (C)</h3><div class="row"><input type="number" id="g_n" placeholder="moles"><input type="number" id="g_t" placeholder="T (K)"><input type="number" id="g_p" placeholder="p (kPa)"></div><div id="g_o" class="res">&hellip;</div></div>`;
+ return h;}
+function calcInit(){const g=id=>{const e=document.getElementById(id);return e?parseFloat(e.value):NaN};const o=(id,t)=>{const e=document.getElementById(id);if(e)e.innerHTML=t};
+ const f=(x,d=2)=>Number(x.toFixed(d));
+ const run=()=>{['tc_o','q_o','s_o','e_o','sb_o','g_o'].forEach(i=>o(i,'&hellip;'));
+  const v=g('tc_v'),u=document.getElementById('tc_u').value;if(!isNaN(v)){let c=u==='C'?v:u==='F'?(v-32)*5/9:v-273.15;if(c<-273.15)o('tc_o','Below absolute zero (-273.15 \u00b0C): not possible.');else o('tc_o',`${f(c)} &deg;C &nbsp;|&nbsp; ${f(c*9/5+32)} &deg;F &nbsp;|&nbsp; ${f(c+273.15)} K`);}
+  const m=g('q_m'),c2=g('q_c'),a=g('q_a'),b=g('q_b');if(![m,c2,a,b].some(isNaN))o('q_o',`&Delta;T = ${f(b-a)}. Q = ${m} &times; ${c2} &times; ${f(b-a)} = <b>${f(m*c2*(b-a))} J</b>`);
+  const tg=g('s_g'),bg=g('s_h'),fi=g('s_f'),pr=g('s_p');let t='';if(!isNaN(tg)&&!isNaN(bg)&&bg>0)t+=`TS = ${f(tg/bg*30)} / 30. `;if(!isNaN(fi)&&!isNaN(pr)&&fi>0){const pe=Math.max(0,1-Math.abs(fi-pr)/fi);t+=`PE = ${f(pe,3)} (your PS = PE &divide; best PE &times; 20).`;}if(t)o('s_o',t);
+  const w=g('e_w'),q=g('e_q'),th=g('e_th'),tc=g('e_tc');let r='';if(!isNaN(w)&&q>0)r+=`Efficiency = ${f(w/q*100,1)}%. `;if(th>0&&!isNaN(tc))r+=tc>=th?'T cold must be lower than T hot.':`Carnot limit = 1 - ${tc}/${th} = ${f((1-tc/th)*100,1)}%.`;if(r)o('e_o',r);
+  const T=g('sb_t'),A=g('sb_a');if(T>0){const j=5.67e-8*Math.pow(T,4);o('sb_o',`Exitance = 5.67e-8 &times; ${T}&#8308; = <b>${f(j)} W/m&sup2;</b>`+(A>0?`; power = ${f(j*A)} W`:''));}
+  const n=g('g_n'),Tg=g('g_t'),p=g('g_p');if(n>0&&Tg>0&&p>0){const V=n*8.314*Tg/(p*1000);o('g_o',`V = nRT/p = ${n}&times;8.314&times;${Tg}&divide;${p*1000} = <b>${f(V*1000)} L</b> (${f(V,4)} m&sup3;)`);}
+ };
+ document.querySelectorAll('#view input,#view select').forEach(e=>{e.oninput=run;e.onchange=run});}
+// ---------- DEVICE & LOG ----------
+function device(){const lg=logs();
+ const rows=lg.map((r,i)=>`<tr><td>${r.min} min</td><td>${r.s}</td><td>${r.e}</td><td>${(r.e-r.s).toFixed(1)}</td><td><button class="ghost" onclick="delLog(${i})">x</button></td></tr>`).join('');
+ const rate=lg.length?lg.reduce((a,r)=>a+(r.e-r.s)/r.min,0)/lg.length:0;
+ return `<div class="card"><h3>Device rules in plain English</h3>${['d1','d2','d3','d4'].map(i=>`<b>${LES[i].i} ${LES[i].n}</b><ul>${LES[i].st.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('')}</div>
+ <div class="card"><h3>Practice run log</h3><div class="row"><input type="number" id="l_m" placeholder="minutes heated"><input type="number" id="l_s" placeholder="start &deg;C" step="0.1"><input type="number" id="l_e" placeholder="end &deg;C" step="0.1"><button class="btn" onclick="addLog()">Add run</button></div>
+ <table><tr><th>Time</th><th>Start</th><th>End</th><th>Gain</th><th></th></tr>${rows||'<tr><td colspan=5 class="small">No runs yet. Log every test of your device.</td></tr>'}</table>
+ ${lg.length?`<div class="res">Average gain: ${rate.toFixed(2)} &deg;C per minute over ${lg.length} runs. <div class="row">Predict: <input type="number" id="p_m" placeholder="minutes" oninput="pred()"><input type="number" id="p_s" placeholder="start &deg;C" step="0.1" oninput="pred()"> <span id="p_o"></span></div><span class="small">Rough guide only: real heating slows as the cup warms, so only trust it near the times you practiced.</span></div>`:''}</div>`;}
+function addLog(){const m=parseFloat($('#l_m').value),s=parseFloat($('#l_s').value),e=parseFloat($('#l_e').value);if([m,s,e].some(isNaN)||m<=0)return;const l=logs();l.push({min:m,s,e});saveLogs(l);render();}
+function delLog(i){const l=logs();l.splice(i,1);saveLogs(l);render();}
+function pred(){const l=logs();const rate=l.reduce((a,r)=>a+(r.e-r.s)/r.min,0)/l.length;const m=parseFloat($('#p_m').value),s=parseFloat($('#p_s').value);if(!isNaN(m)&&!isNaN(s))$('#p_o').innerHTML='<b>~'+(s+rate*m).toFixed(1)+' °C</b>';}
+// ---------- TEACH ----------
+const CHK=[
+ 'Listen to Heat_Hero.mp3 all the way through (Claude has not heard it)',
+ 'Both songs: the sung words match the lyrics shown below (Heat Hero and Fourth Power)',
+ 'Facts in the song are right: K = C + 273.15, F to C = minus 32 then x 5/9',
+ 'Heat flows hot to cold is stated correctly',
+ 'Nothing in the song says temperature = heat',
+ 'Listen to Fourth_Power.mp3: words clear, no echo, facts match lyrics (Carnot 70%, T to the fourth, Q = kAΔT/L)',
+ 'Official Division C rules PDF read; fix the "expect / confirm" items in B vs C differences',
+ 'Practice test answer keys (practice_test.html) checked by a coach',
+ 'Cheat sheet (cheat_sheet.html) printed and checked against the binder rules'];
+const LYR1=`[Verse 1]
+Temperature's the reading, heat's the energy that flows,
+Hot to cold, never backwards, everybody knows!
+Kelvin's just Celsius, add two-seventy-three,
+Point one-five, don't forget it, that's the key!
+
+[Pre-Chorus]
+Fahrenheit? Minus thirty-two,
+Times five-ninths, that's all you do!
+
+[Chorus]
+Q equals m, c, delta T!
+Mass times stubborn times the change you see!
+Q equals m, c, delta T!
+Heat in joules, one, two, three!
+Mass, c, delta T! Hey! Mass, c, delta T! Hey!
+
+[Verse 2]
+First law: in minus out is what you keep,
+Delta U equals Q minus W, don't sleep!
+Heat goes in, work goes out, energy can't hide,
+Count it up, it all adds up, the books are satisfied!
+
+[Pre-Chorus]
+Efficiency, easy as can be,
+Work out over heat in, times a hundred, see!
+
+[Chorus]
+Q equals m, c, delta T!
+Mass times stubborn times the change you see!
+Q equals m, c, delta T!
+Heat in joules, one, two, three!
+
+[Verse 3]
+P V equals n R T, hotter gas pushes hard,
+Squeeze it small, pressure's tall, play your gas-law card!
+Score time: gain over best, times thirty, that's your T S,
+Guess it close, one minus the miss over final, yes!
+
+[Bridge]
+Touch, flow, glow! Conduction, convection, radiation!
+Latent's hidden, sensible you see,
+Sublimation skips the liquid, deposition's frost for free!
+Black is latent, Carnot's cycle, Joule did work, Kelvin's scale,
+Clausius named entropy, Boltzmann, Maxwell tell the tale!
+
+[Final Chorus, key change up]
+Q equals m, c, delta T!
+Mass times stubborn times the change you see!
+Q equals m, c, delta T!
+Heat Hero, that's me! Hey!`;
+const LYR2=`[Intro]
+Double the heat? Sixteen!
+Fourth power!
+
+[Verse 1 - rap]
+Carnot's got a limit, check the cold over hot,
+One minus T-cold over T-hot, that's the shot.
+Kelvin only, never Celsius, that's the rule,
+Three hundred, thousand: seventy percent, cool.
+Eighty percent engine? Nope, that's fake,
+The second law says no, for goodness' sake!
+
+[Pre-Chorus - sung]
+Everything that's warm is glowing,
+You can't see it, but it's showing...
+
+[Chorus - shout]
+T to the fourth! Sigma T to the fourth!
+Double the Kelvin, sixteen times the glow!
+T to the fourth! Sigma T to the fourth!
+Five-six-seven, ten to the minus eight, now you know!
+
+[Verse 2 - rap]
+Lamp on a sphere, four pi r squared,
+Twice as far? One quarter of the glare.
+Wall of foam: Q equals k, A, delta T, over L,
+Thick means slow, thin means fast, ring the bell!
+Centimeters to meters, then you're good to go,
+Watts per meter Kelvin, let the units flow!
+
+[Pre-Chorus - sung]
+Everything that's warm is glowing,
+Hotter means it's bluer, showing...
+
+[Chorus - shout]
+T to the fourth! Sigma T to the fourth!
+Double the Kelvin, sixteen times the glow!
+T to the fourth! Sigma T to the fourth!
+Five-six-seven, ten to the minus eight, now you know!
+
+[Bridge - half-time, whispered then building]
+Ice and hot water? Check the heat you've got:
+Can it melt all the ice? Yes or not?
+Wien says hotter, peak goes blue,
+Lambda times T is two-point-nine, ten to the minus three, it's true.
+Third law: cool to zero, you'll never get there,
+Entropy goes to zero, but it's out of air.
+
+[Final Chorus - key change up, all voices]
+T to the fourth! Sigma T to the fourth!
+Double the Kelvin, sixteen times the glow!
+T to the fourth! Sigma T to the fourth!
+Division C, now you know!
+
+[Outro - spoken, crowd]
+Fourth power!`;
+function chkGet(){try{return JSON.parse(localStorage.getItem('thermo_chk')||'{}')}catch(e){return {}}}
+function chkSet(i,v){const c=chkGet();c[i]=v;try{localStorage.setItem('thermo_chk',JSON.stringify(c))}catch(e){}const n=CHK.filter((_,k)=>c[k]).length;const p=document.getElementById('chkn');if(p)p.textContent=n+'/'+CHK.length;}
+const SONGS=[{id:'hh',title:'Heat Hero (Divisions B and C)',file:'songs/Heat_Hero.mp3',lyr:LYR1},{id:'fp',title:'Fourth Power (Division C)',file:'songs/Fourth_Power.mp3',lyr:LYR2}];
+function secs(lyr){return lyr.split(/\n\n(?=\[)/).map(b=>{const l=b.split('\n');return {tag:l[0],txt:l.slice(1).join('\n')}});}
+const NOTES={
+"Temperature's the reading, heat's the energy that flows,":"Temperature is what a thermometer shows. Heat is energy moving from one thing to another.",
+"Hot to cold, never backwards, everybody knows!":"Heat flows from hot things to cold things by itself, never the other way (second law).",
+"Kelvin's just Celsius, add two-seventy-three,":"K = °C + 273 (exactly 273.15).",
+"Point one-five, don't forget it, that's the key!":"The exact number is 273.15, so K = °C + 273.15.",
+"Fahrenheit? Minus thirty-two,":"Step 1 of °C = (°F − 32) × 5/9: subtract 32 first (water freezes at 32 °F).",
+"Times five-ninths, that's all you do!":"Step 2: multiply by 5/9. Together: °C = (°F − 32) × 5/9.",
+"Q equals m, c, delta T!":"The heat formula Q = m x c x ΔT. Q is the heat energy needed.",
+"Mass times stubborn times the change you see!":"m = mass (how much stuff). c = specific heat, the \"stubborn\" number. ΔT = how many degrees it changed.",
+"Heat in joules, one, two, three!":"Q = m c ΔT. Heat Q is measured in joules (J).",
+"Mass, c, delta T! Hey! Mass, c, delta T! Hey!":"Say the three parts again: mass, specific heat, temperature change.",
+"Heat Hero, that's me! Hey!":"Just the hook: you are the Heat Hero.",
+"First law: in minus out is what you keep,":"First law: energy is kept, not made or lost. What you keep = energy in minus energy out.",
+"Delta U equals Q minus W, don't sleep!":"ΔU = Q − W. The change in a system's energy equals heat added minus work done by the system.",
+"Heat goes in, work goes out, energy can't hide,":"ΔU = Q − W. Heat in raises the energy, work out lowers it, and energy never disappears.",
+"Count it up, it all adds up, the books are satisfied!":"Think of a bank account: deposits (heat in) minus withdrawals (work out) equals your balance.",
+"Efficiency, easy as can be,":"Efficiency η = W / Q in: the share of the heat put in that becomes useful work.",
+"Work out over heat in, times a hundred, see!":"Efficiency (%) = work out ÷ heat in × 100, or η = W / Q in.",
+"P V equals n R T, hotter gas pushes hard,":"Ideal gas law PV = nRT. Hotter gas means higher pressure.",
+"Squeeze it small, pressure's tall, play your gas-law card!":"Boyle's law: P₁V₁ = P₂V₂ (temperature constant). Less volume means more pressure.",
+"Score time: gain over best, times thirty, that's your T S,":"Device score idea: your temperature gain compared to the best gain, scaled to 30. Check the official rules for the exact formula.",
+"Guess it close, one minus the miss over final, yes!":"Prediction score idea: the closer your guess is to the real final temperature, the higher the score. Check the official rules for the exact formula.",
+"Touch, flow, glow! Conduction, convection, radiation!":"The three ways heat moves: touch = conduction, flowing fluid = convection, glowing light = radiation.",
+"Latent's hidden, sensible you see,":"Latent heat (phase change, no temperature change): Q = m L. Sensible heat (temperature changes): Q = m c ΔT.",
+"Sublimation skips the liquid, deposition's frost for free!":"Sublimation: solid straight to gas (dry ice). Deposition: gas straight to solid (frost).",
+"Black is latent, Carnot's cycle, Joule did work, Kelvin's scale,":"Names: Joseph Black found latent heat. Carnot, the ideal engine cycle. Joule, heat and work are equal. Kelvin, the absolute scale.",
+"Clausius named entropy, Boltzmann, Maxwell tell the tale!":"Clausius named entropy. Boltzmann tied entropy to molecule motion. Maxwell worked out gas molecule speeds.",
+"Double the heat? Sixteen!":"P ∝ T⁴. Doubling the Kelvin temperature multiplies the radiated power by 2⁴ = 16.",
+"Fourth power!":"Radiated power depends on temperature to the 4th power: T⁴.",
+"Carnot's got a limit, check the cold over hot,":"Carnot's limit is the best any heat engine can ever do, set by the hot and cold temperatures.",
+"One minus T-cold over T-hot, that's the shot.":"Maximum efficiency = 1 − T cold ÷ T hot.",
+"Kelvin only, never Celsius, that's the rule,":"Use Kelvin in this formula, never Celsius.",
+"Three hundred, thousand: seventy percent, cool.":"Uses η = 1 − T cold ÷ T hot with the temperatures in the line (in Kelvin).",
+"Eighty percent engine? Nope, that's fake,":"80% is higher than the 70% limit, so that engine cannot exist.",
+"The second law says no, for goodness' sake!":"The second law of thermodynamics forbids beating the Carnot limit.",
+"Everything that's warm is glowing,":"Every object gives off thermal radiation, even you.",
+"You can't see it, but it's showing...":"Room-temperature things glow in infrared light, which our eyes can't see.",
+"Hotter means it's bluer, showing...":"Hotter objects glow at shorter, bluer wavelengths (Wien's law).",
+"T to the fourth! Sigma T to the fourth!":"Stefan–Boltzmann law: power radiated P = σ A T⁴. σ (sigma) is a constant.",
+"Double the Kelvin, sixteen times the glow!":"2⁴ = 16, so doubling the Kelvin temperature makes it radiate 16 times more power.",
+"Five-six-seven, ten to the minus eight, now you know!":"σ = 5.67 × 10⁻⁸ W/(m²·K⁴).",
+"Division C, now you know!":"The hook: Division C students know T⁴.",
+"Lamp on a sphere, four pi r squared,":"Sphere area = 4πr². Light intensity I = P / (4πr²).",
+"Twice as far? One quarter of the glare.":"Inverse-square law: I ∝ 1 / r².",
+"Wall of foam: Q equals k, A, delta T, over L,":"Conduction rate: Q/t = k A ΔT / L. k = how well it conducts, A = area, ΔT = temperature difference, L = thickness.",
+"Thick means slow, thin means fast, ring the bell!":"A bigger L (thicker wall) slows heat. A thinner wall lets it through faster.",
+"Centimeters to meters, then you're good to go,":"Change lengths to meters before using the formula.",
+"Watts per meter Kelvin, let the units flow!":"The unit for k is watts per meter per kelvin: W/(m·K).",
+"Ice and hot water? Check the heat you've got:":"Hot water gives up energy: Q = m c ΔT (cooling down to 0 °C).",
+"Can it melt all the ice? Yes or not?":"Melting all the ice needs Q = m L (L = 334 J/g). Compare the two Q values to see if any ice is left.",
+"Wien says hotter, peak goes blue,":"Wien's law: the hotter the object, the bluer its brightest color.",
+"Lambda times T is two-point-nine, ten to the minus three, it's true.":"Wien's law: λ max × T = 2.898 × 10⁻³ m·K.",
+"Third law: cool to zero, you'll never get there,":"Third law: you can get closer and closer to 0 K but never reach it.",
+"Entropy goes to zero, but it's out of air.":"For a perfect crystal, entropy approaches zero as temperature approaches 0 K, but 0 K itself can't be reached."
+};
+
+function songLines(id){const s=SONGS.find(x=>x.id===id),out=[];secs(s.lyr).forEach((x,i)=>{x.txt.split('\n').forEach((ln,j)=>out.push({sec:i,first:j===0,tag:x.tag,ln,note:NOTES[ln]||''}))});return out;}
+(function(){try{if(localStorage.getItem('thermo_lsync'))return;const old=JSON.parse(localStorage.getItem('thermo_sync')||'{}');const n={};SONGS.forEach(s=>{const o=old[s.id];if(!o)return;const L=songLines(s.id);n[s.id]=L.map(l=>l.first&&typeof o[l.sec]==='number'?o[l.sec]:null)});localStorage.setItem('thermo_lsync',JSON.stringify(n))}catch(e){}})();
+function syncGet(){try{return JSON.parse(localStorage.getItem('thermo_lsync')||'{}')}catch(e){return {}}}
+function syncSave(o){try{localStorage.setItem('thermo_lsync',JSON.stringify(o))}catch(e){}}
+function sTimes(id){const t=syncGet()[id]||[];return songLines(id).map((_,i)=>typeof t[i]==='number'?t[i]:null);}
+function fmtT(t){return t===null?'--':(Math.floor(t/60)+':'+(t%60).toFixed(1).padStart(4,'0'));}
+function syncPaint(id){const t=sTimes(id);t.forEach((v,i)=>{const e=document.getElementById('st_'+id+'_'+i);if(e)e.textContent=fmtT(v)});}
+function syncStore(id,t){const o=syncGet();o[id]=t;syncSave(o);syncPaint(id);}
+function syncTap(id){const a=document.getElementById('a_'+id);const t=sTimes(id);const i=t.findIndex(v=>v===null);if(i<0)return;t[i]=Math.round(a.currentTime*10)/10;syncStore(id,t);syncMsg(id,'Line '+(i+1)+' set at '+fmtT(t[i])+(i+1<t.length?'. Next: line '+(i+2):'. All set!'));}
+function syncNudge(id,i,d){const t=sTimes(id);if(t[i]===null)return;t[i]=Math.max(0,Math.round((t[i]+d)*10)/10);syncStore(id,t);const a=document.getElementById('a_'+id);if(a){a.currentTime=t[i];a.play()}}
+function syncSetNow(id,i){const a=document.getElementById('a_'+id);const t=sTimes(id);t[i]=Math.round(a.currentTime*10)/10;syncStore(id,t);}
+function syncGo(id,i){const t=sTimes(id)[i];if(t===null)return;const a=document.getElementById('a_'+id);a.currentTime=t;a.play();}
+function syncClearLine(id,i){const t=sTimes(id);t[i]=null;syncStore(id,t);}
+function syncUndo(id){const t=sTimes(id);let i=t.findIndex(v=>v===null);i=i<0?t.length-1:i-1;if(i<0)return;t[i]=null;syncStore(id,t);syncMsg(id,'Cleared line '+(i+1)+'. Next to tap: line '+(i+1));}
+window._clr={};function syncClear(id){const b=document.getElementById('clr_'+id);if(!window._clr[id]){window._clr[id]=1;if(b)b.textContent='Tap again to clear all';syncMsg(id,'Tap Clear all again to erase every timing');setTimeout(()=>{window._clr[id]=0;const bb=document.getElementById('clr_'+id);if(bb)bb.textContent='Clear all'},4000);return}window._clr[id]=0;if(b)b.textContent='Clear all';syncStore(id,[]);syncMsg(id,'All timings cleared. Next to tap: line 1');}
+function syncExport(id){const j=JSON.stringify(sTimes(id));try{navigator.clipboard.writeText(j)}catch(e){}prompt('Timings (copied if allowed). Save this text:',j);}
+function syncImport(id){const j=prompt('Paste timings:');if(!j)return;try{const t=JSON.parse(j);if(!Array.isArray(t))throw 0;syncStore(id,t);syncMsg(id,'Imported')}catch(e){alert('Could not read that text')}}
+function syncMsg(id,m){const e=document.getElementById('sm_'+id);if(e)e.textContent=m;}
+function scrollIn(e){const bx=e.closest('.lyrbox');if(!bx)return;bx.scrollTo({top:e.offsetTop-bx.clientHeight/2+e.clientHeight/2,behavior:'smooth'});}
+function curLine(t,ct){let cur=-1;t.forEach((v,i)=>{if(v!==null&&v<=ct+0.05&&(cur<0||v>=t[cur]))cur=i});return cur;}
+function syncTick(id){const a=document.getElementById('a_'+id);if(!a)return;const t=sTimes(id);const cur=curLine(t,a.currentTime);const key='_cur_'+id;if(window[key]===cur)return;window[key]=cur;t.forEach((_,i)=>{const e=document.getElementById('sc_'+id+'_'+i);if(e)e.style.background=i===cur?'var(--accbg)':''});const e=document.getElementById('sc_'+id+'_'+cur);if(e&&!a.paused)scrollIn(e);}
+function songCard(s){const L=songLines(s.id),t=sTimes(s.id);let last='';
+ return `<div class="card"><h3>&#127925; ${s.title}</h3><audio id="a_${s.id}" data-song="1" onplay="setRate(rateGet())" onloadedmetadata="setRate(rateGet())" controls preload="none" style="width:100%" src="${s.file}" ontimeupdate="syncTick('${s.id}')" onseeked="syncTick('${s.id}')"></audio>
+ ${rateBar()}<p class="small">File: ${s.file}. If the player is silent, keep trainer.html and the songs folder together.</p>
+ <div class="tip"><b>Sync line by line:</b> press play. When each line starts, tap <b>TAP</b>. It marks the next line in order. Fix any line with -0.1 / +0.1, or press <b>Set now</b> on a line to stamp it at the current time.</div>
+ <div class="row" style="position:sticky;top:0;z-index:5;background:var(--card);padding:6px 0"><button class="btn" style="font-size:18px;padding:14px 28px" onclick="syncTap('${s.id}')">TAP</button><button class="ghost" onclick="syncUndo('${s.id}')">Undo last</button><button class="ghost" id="clr_${s.id}" onclick="syncClear('${s.id}')">Clear all</button><button class="ghost" onclick="syncExport('${s.id}')">Export</button><button class="ghost" onclick="syncImport('${s.id}')">Import</button></div>
+ <div class="small" id="sm_${s.id}">Next to tap: line ${(t.findIndex(v=>v===null)+1)||'none (all set)'}</div>
+ <div class="lyrbox">${L.map((x,i)=>{let h='';if(x.tag!==last){last=x.tag;h=`<div class="small" style="margin-top:10px;color:var(--acc);font-weight:700">${x.tag}</div>`}return h+`<div id="sc_${s.id}_${i}" style="border:1px solid var(--line);border-radius:8px;padding:5px 8px;margin:4px 0"><div class="row" style="margin:0"><span style="flex:1 1 200px">${i+1}. ${x.ln}</span><span class="small" id="st_${s.id}_${i}">${fmtT(t[i])}</span><button class="ghost" onclick="syncNudge('${s.id}',${i},-0.1)">-0.1</button><button class="ghost" onclick="syncNudge('${s.id}',${i},0.1)">+0.1</button><button class="ghost" onclick="syncSetNow('${s.id}',${i})">Set now</button><button class="ghost" onclick="syncGo('${s.id}',${i})">Play</button><button class="ghost" onclick="syncClearLine('${s.id}',${i})">x</button></div>${x.note?`<div class="small">${x.note}</div>`:''}</div>`}).join('')}</div></div>`;}
+function songs(){const c=chkGet();const n=CHK.filter((_,i)=>c[i]).length;
+ return SONGS.map(songCard).join('')+`<div class="card"><h3>My checklist <span class="pill" id="chkn">${n}/${CHK.length}</span></h3>${CHK.map((t,i)=>`<label style="display:block;margin:6px 0"><input type="checkbox" ${c[i]?'checked':''} onchange="chkSet(${i},this.checked)"> ${t}</label>`).join('')}</div>`;}
+// ---------- FEEL IT: physical anchors + repetition drill ----------
+const FEEL=[
+ {id:'f1',t:'Heat vs temperature',p:'Which holds more heat: a bathtub of warm water or a cup of boiling water?',a:'A bathtub of warm water holds MORE heat than a cup of boiling water. Temperature = how hot (what a thermometer reads). Heat = how much energy in total (how big the tub is).',s:'Temperature is how hot. Heat is how much.',n:''},
+ {id:'f2',t:'Heat flows hot to cold',p:'Hold an ice cube. Which way does the heat go?',a:'Your hand feels cold because heat leaves your hand and goes into the ice. Heat never flows the other way by itself.',s:'Heat always runs downhill: hot to cold.',n:''},
+ {id:'f3',t:'Kelvin',p:'Celsius to Kelvin?',a:'Picture a thermometer: ice water is 0 °C, and the Kelvin scale starts 273 steps lower, at the coldest possible. Climb 273 steps from there to reach freezing.',s:'Kelvin = Celsius + 273 (273.15 exactly).',n:'Water freezes: 0 °C = 273 K. Water boils: 100 °C = 373 K. Room 20 °C = 293 K.'},
+ {id:'f4',t:'Fahrenheit to Celsius',p:'Fahrenheit to Celsius?',a:'Your body: 98.6 °F is 37 °C. Freezing water: 32 °F is 0 °C. Boiling: 212 °F is 100 °C. Anchor on those three.',s:'Subtract 32, then times five-ninths.',n:'86 °F: 86 - 32 = 54, 54 x 5/9 = 30 °C. Quick estimate: subtract 32, then a bit over half.'},
+ {id:'f5',t:'Q = m c ΔT',p:'How much energy to heat something?',a:'Pot on a stove. m = how BIG the pot of water. c = how STUBBORN the material (water is very stubborn, metal is easy). ΔT = how FAR you push the temperature. Big, stubborn, far = lots of energy.',s:'Big times stubborn times how far.',n:'200 g water, up 20 °C: 200 x 4.186 x 20 = 16,744 J. Water c = 4.186 J per gram per degree.'},
+ {id:'f6',t:'Specific heat',p:'Why is beach sand scorching but the ocean still cool?',a:'Sand is not stubborn (low c): a little energy changes its temperature a lot. Water is very stubborn (high c): it takes huge energy to warm up, so it stays cooler and also cools slowly.',s:'Low c heats fast. High c is stubborn.',n:'Water 4.186, aluminum 0.90, copper 0.385 (J per gram per degree).'},
+ {id:'f7',t:'Conduction',p:'Metal spoon left in hot soup. What happens and why?',a:'The handle gets hot by touch, because the energy hops from atom to atom through the solid. A wooden spoon stays cool: wood passes it on slowly (good insulator).',s:'Conduction = touch. Metals pass it fast, foam and wood slow.',n:''},
+ {id:'f8',t:'Convection',p:'Why does steam rise above a pot, and why put a heater low in a room?',a:'Warm fluid is lighter and rises, cool fluid sinks, so a loop forms and carries heat. Think hot air balloon.',s:'Convection = moving fluid carries the heat.',n:''},
+ {id:'f9',t:'Radiation',p:'How does the Sun warm your face with nothing in between?',a:'Stand near a campfire: your face is hot even though the air is cool. Light waves carry the energy, no air needed. A black T-shirt gets hotter than a white one in the sun.',s:'Radiation = light carries heat, needs no stuff.',n:''},
+ {id:'f10',t:'Latent heat',p:'Ice in a drink: why does the drink get cold but the ice stays 0 °C?',a:'The ice takes energy from the drink but uses it to MELT, not to warm up. The temperature stays at 0 °C until all the ice is gone. Sweat cools you the same way: evaporating takes energy from your skin.',s:'During a phase change, energy goes into the change, not the temperature.',n:'Melting 50 g ice: 50 x 334 = 16,700 J, while temperature stays 0 °C.'},
+ {id:'f11',t:'Phase change names',p:'Name the change: fog on a mirror, frost on a car window, dry ice smoke.',a:'Fog on a mirror: condensation (gas to liquid). Frost on a window: deposition (gas to solid). Dry ice smoking away: sublimation (solid to gas).',s:'Frost forms = deposition. Dry ice vanishes = sublimation. Fog = condensation.',n:'Solid-liquid melting/freezing, liquid-gas vaporizing/condensing.'},
+ {id:'f12',t:'Gas laws',p:'What happens to a gas if you squeeze it, or heat it?',a:'Bike pump: squeezing air into less space pushes back harder (pressure up) and the pump gets warm. A sealed can in a fire: heat makes the gas push harder until it bursts. Tires read low pressure on a cold morning.',s:'Squeeze it, pressure up. Heat it, pressure up. PV = nRT.',n:'Use KELVIN in gas formulas. Boyle: 2 L at 1 atm squeezed to 0.5 L is 4 atm.'},
+ {id:'f13',t:'First law',p:'ΔU = Q - W in plain words?',a:'Bank account. U is your balance. Heat IN is a deposit (+Q). Work done BY the gas is a withdrawal (-W). Pumping a bike tire does work ON the air, so the air warms up.',s:'Energy in minus energy out is what you keep.',n:'Gas takes in 500 J of heat and does 200 J of work: you keep 300 J.'},
+ {id:'f14',t:'Second law and entropy',p:'Why does ink spread out in water but never gather back up?',a:'Messy rooms do not clean themselves. Hot coffee cools down but never heats itself back up. Energy and stuff spread out, and that is the direction time goes. That spreading is entropy going up.',s:'Things spread out and never un-spread by themselves.',n:''},
+ {id:'f15',t:'Efficiency',p:'How good is an engine?',a:'Eat a pizza slice: only some of the heat you put in becomes useful work, the rest leaves as hot exhaust. A car engine gets hot and that waste heat is the cost.',s:'Efficiency = work out divided by heat in.',n:'Takes in 500 J, gives 150 J of work: 150/500 = 30%.'},
+ {id:'f16',t:'Carnot limit',p:'What is the best an engine can possibly do?',a:'A waterwheel works better with a bigger drop. Heat engines work better with a bigger gap between hot and cold. No engine beats Carnot, and 100% is impossible.',s:'One minus cold over hot, in Kelvin.',n:'300 K and 1000 K: 1 - 0.3 = 70% maximum.'},
+ {id:'f17',t:'Device that collects heat',p:'What makes your lamp device warm the water more?',a:'Think of a car parked in the sun with the windows up: dark inside, trapped air, foil sun shade outside. Dark matte inside absorbs. Foam or air around stops heat leaking out. Close the top to stop convection.',s:'Absorb it, then trap it.',n:''},
+ {id:'f18',t:'Inverse-square (lamp height)',p:'Why does the lamp warm less when it is higher?',a:'Flashlight on a wall: step back twice as far and the spot is 4 times bigger and much dimmer. The same light is spread over 4 times the area.',s:'Twice as far = a quarter as bright.',n:'Lamp 20 cm up: 4 units. 40 cm up: 1 unit.'},
+ {id:'f19',t:'T to the fourth (C)',c:1,p:'Hot object glowing: how does power change with temperature?',a:'A stove coil: warm = invisible, hotter = dull red, hotter = bright orange-white. Double the Kelvin and the power goes up 16 times (2 x 2 x 2 x 2).',s:'Double the Kelvin, sixteen times the glow.',n:'P = sigma x A x T^4. sigma = 5.67e-8. 0.2 m2 at 500 K: about 709 W.'},
+ {id:'f20',t:'Conduction rate (C)',c:1,p:'Thick or thin wall: which loses heat faster?',a:'A thick winter blanket vs a thin sheet. Thick (big L) slows heat; a big area or big temperature difference speeds it. Metal (big k) is fast, foam (small k) is slow.',s:'Rate = k A deltaT over L.',n:'k 0.8, A 2, deltaT 15, L 0.01: 2400 W.'},
+ {id:'f21',t:'Third law (C)',c:1,p:'Can you reach absolute zero?',a:'Walk toward a wall, each step covering half the remaining distance. You get closer and closer but never arrive. Cooling to 0 K is the same: always almost, never exactly.',s:'You can get close to zero Kelvin, never all the way.',n:''}
+];
+// ---------- memory chart + daily plan ----------
+function jget(k,d){try{return JSON.parse(localStorage.getItem(k)||'')||d}catch(e){return d}}
+function jset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dayN(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
+function planGet(){const p=jget('thermo_plan',null)||{start:today(),days:14,min:15};if(!jget('thermo_plan',null))jset('thermo_plan',p);p.min=Math.min(15,p.min||15);return p;}
+function stageCounts(){const b=feelBox(),dy=jget('thermo_feel_days',{});let n=0,s=0,l=0;FEEL.forEach(c=>{const d=(dy[c.id]||[]).length;if(!d){n++;return}if((b[c.id]||0)>=4&&d>=2)l++;else s++;});return {n,s,l};}
+function feelLog(id,ok,secs){const t=today();const dy=jget('thermo_feel_days',{});const a=dy[id]||[];if(!a.includes(t))a.push(t);dy[id]=a;jset('thermo_feel_days',dy);
+ const tm=jget('thermo_feel_time',{});tm[t]=(tm[t]||0)+Math.min(60,secs);jset('thermo_feel_time',tm);
+ const h=jget('thermo_feel_hist',{});const c=stageCounts();h[t]={s:c.s,l:c.l};jset('thermo_feel_hist',h);if(!ok){const ms=jget('thermo_feel_miss',{});ms[id]=(ms[id]||0)+1;jset('thermo_feel_miss',ms)}const nn=jget('thermo_feel_n',{});nn[t]=(nn[t]||0)+1;jset('thermo_feel_n',nn);const bb=feelBox();if(ok&&(bb[id]||0)>=4&&(dy[id]||[]).length>=2){const lk=jget('thermo_feel_lock',{});if(!lk[id]){lk[id]=t;jset('thermo_feel_lock',lk)}}}
+function planSet(k,v){const p=planGet();p[k]=k==='start'?v:Math.max(1,parseInt(v)||1);if(k==='min')p.min=Math.min(15,p.min);jset('thermo_plan',p);planPaint();}
+function planPaint(){const e=document.getElementById('feelPlan');if(!e)return;const p=planGet(),c=stageCounts(),tm=jget('thermo_feel_time',{}),h=jget('thermo_feel_hist',{});
+ const left=Math.max(1,p.days-dayN(p.start,today())),elapsed=Math.max(0,dayN(p.start,today()));const need=FEEL.length-c.l;
+ const rawRec=Math.max(10,Math.round(need*4*0.75/left/5)*5),rec=Math.min(15,rawRec),todayMin=Math.round((tm[today()]||0)/6)/10;const pct=Math.min(100,Math.round(100*todayMin/p.min));
+ const W=640,H=180,L=34,B=22,T=10,R=8,pw=W-L-R,ph=H-T-B,N=FEEL.length;const X=i=>L+pw*i/Math.max(1,p.days-1),Y=v=>T+ph*(1-v/N);
+ const pts=k=>{let last=0,out=[];for(let i=0;i<p.days;i++){const d=new Date(p.start+'T00:00:00');d.setDate(d.getDate()+i);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(key>today())break;if(h[key])last=h[key][k];out.push(X(i)+','+Y(last))}return out.join(' ')};
+ const grid=[0,0.5,1].map(f=>`<line x1="${L}" x2="${W-R}" y1="${Y(N*f)}" y2="${Y(N*f)}" stroke="var(--line)"/><text x="2" y="${Y(N*f)+4}" font-size="11" fill="var(--mut)">${Math.round(N*f)}</text>`).join('');
+ const xl=[0,Math.floor(p.days/2),p.days-1].map(i=>`<text x="${X(i)}" y="${H-6}" font-size="11" fill="var(--mut)" text-anchor="middle">Day ${i+1}</text>`).join('');
+ const nowX=X(Math.min(p.days-1,elapsed));
+ e.innerHTML=`<h3>Memory progress &amp; daily plan</h3>
+ <div class="row"><span><b>${c.n}</b> new</span><span><b style="color:var(--acc)">${c.s}</b> short-term</span><span><b style="color:var(--ok)">${c.l}</b> long-term</span><span class="small">of ${N} cards</span></div>
+ <div class="bar" style="height:12px"><i style="width:${Math.round(100*c.l/N)}%"></i></div>
+ <p class="small">Long-term = 4 right in a row AND remembered on 2 different days. Short-term = seen, but not locked in yet.</p>
+ <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto">${grid}${xl}<line x1="${nowX}" x2="${nowX}" y1="${T}" y2="${T+ph}" stroke="var(--mut)" stroke-dasharray="3 3"/><polyline fill="none" stroke="var(--acc)" stroke-width="2.5" points="${pts('s')}"/><polyline fill="none" stroke="var(--ok)" stroke-width="2.5" points="${pts('l')}"/><text x="${W-R}" y="${Y(N)+12}" font-size="11" fill="var(--mut)" text-anchor="end">goal: all ${N} long-term</text></svg>
+ <div class="small"><span style="color:var(--acc)">&#9632;</span> short-term &nbsp; <span style="color:var(--ok)">&#9632;</span> long-term &nbsp; dashed line = today</div>
+ <div class="row" style="margin-top:8px">Goal in <input type="number" min="1" style="width:70px" value="${p.days}" onchange="planSet('days',this.value)"> days &middot; I can study <input type="number" min="1" max="15" style="width:70px" value="${p.min}" onchange="planSet('min',this.value)"> min/day &middot; start <input type="date" value="${p.start}" onchange="planSet('start',this.value)"></div>
+ <div class="res">Day ${Math.min(elapsed+1,p.days)} of ${p.days}. Still to lock in: ${need} cards. Suggested: <b>${rec} min/day</b>${rawRec>15?' (capped at 15 so it stays doable; add days if you want a lighter load)':''}${p.min<rec?` (you set ${p.min}: a little short, add some or extend the days)`:' (you are on track with your setting)'}.
+ <div class="small" style="margin-top:4px">Today: ${todayMin} of ${p.min} min</div><div class="bar" style="height:10px"><i style="width:${pct}%"></i></div></div>`;}
+
+let feelCur=null,feelShow=false;
+function feelBox(){try{return JSON.parse(localStorage.getItem('thermo_feel')||'{}')}catch(e){return {}}}
+function feelSave(o){try{localStorage.setItem('thermo_feel',JSON.stringify(o))}catch(e){}}
+function feelPick(lv){const b=feelBox();let pool=FEEL.filter(c=>lv==='C'||!c.c);const fs=document.getElementById('feelSet');if(!fs||fs.value==='top'){const t10=pool.filter(c=>TOP10.includes(c.id));if(t10.some(c=>(b[c.id]||0)<3))pool=t10}let tot=0;const w=pool.map(c=>{const x=6-Math.min(5,b[c.id]||0);tot+=x*x;return x*x});let r=Math.random()*tot,i=0;while(i<pool.length-1&&r>=w[i]){r-=w[i];i++}let c=pool[i];if(pool.length>1&&c.id===feelCur){c=pool[(i+1)%pool.length]}return c.id;}
+function feelPaint(){const e=document.getElementById('feelDrill');if(!e)return;teamPaint();const c=FEEL.find(x=>x.id===feelCur);const b=feelBox();const done=FEEL.filter(x=>(b[x.id]||0)>=4).length;
+ e.innerHTML=`<div class="small">Mastered ${done}/${FEEL.length} (4 right in a row). Missed cards come back more often.</div><h3>${c.e} ${c.t}${c.c?' <span class="pill cp">C</span>':''}</h3><div style="font-size:18px;margin:8px 0">${pl(c.p)}</div>`+
+ (feelShow?`<div class="mem"><b>Picture it:</b> ${pl(c.a)}</div><div class="hook">${c.s}</div>${c.d?`<div class="try"><b>Try it (30 seconds):</b> ${c.d}</div>`:''}${c.n?`<div class="try"><b>With numbers:</b> ${pl(c.n)}</div>`:''}<div class="row"><button class="btn" onclick="feelGrade(1)">Got it</button><button class="ghost" onclick="feelGrade(0)">Missed it</button></div>`:`<div class="row"><button class="btn" onclick="feelShow=true;feelPaint();if(SPK.auto){const c=FEEL.find(x=>x.id===feelCur);speak(c.a+' '+c.s+' '+c.n)}">Show the picture</button><span class="small">Say the answer out loud first.</span></div>`);}
+let feelT0=Date.now();
+function feelSay(){const e=document.getElementById('feelDrill');if(e)speak(spkText(e));}
+function feelNext(){feelT0=Date.now();feelCur=feelPick(document.getElementById('feelLv')?document.getElementById('feelLv').value:'B');feelShow=false;feelPaint();if(typeof SPK!=='undefined'&&SPK.auto){const c=FEEL.find(x=>x.id===feelCur);speak(c.t+'. '+c.p)}}
+function feelGrade(ok){const b=feelBox();b[feelCur]=ok?(b[feelCur]||0)+1:0;feelSave(b);feelLog(feelCur,ok,(Date.now()-feelT0)/1000);if(TEAM.on){if(ok)TEAM.score[TEAM.turn]++;TEAM.turn=1-TEAM.turn}planPaint();feelNext();}
+// ---------- EXPERIMENTS + coverage ----------
+const CONC=[
+ {id:'temp',t:'Heat vs temperature'},{id:'flow',t:'Heat flows hot to cold'},{id:'units',t:'Units and Kelvin'},
+ {id:'cond',t:'Conduction'},{id:'conv',t:'Convection'},{id:'rad',t:'Radiation'},
+ {id:'insul',t:'Insulation'},{id:'absorb',t:'Dark absorbs more'},{id:'spec',t:'Specific heat (stubborn)'},
+ {id:'latent',t:'Latent heat / phase change'},{id:'mix',t:'Mixing: Q = m c ΔT'},{id:'gas',t:'Gas laws'},
+ {id:'first',t:'First law: work becomes heat'},{id:'entropy',t:'Entropy (spreading out)'},{id:'invsq',t:'Inverse-square (lamp distance)'},
+ {id:'device',t:'Device design'},
+ {id:'cool',t:'Cooling over time (Newton)',c:1},{id:'rateL',t:'Thickness and conduction rate',c:1}];
+const EXPS=[
+ {id:'e0',t:'Bathtub vs cup: heat is not temperature',min:20,tags:['temp','latent','flow'],mat:'A small cup of hot tap water, a big bowl of warm tap water, 2 ice cubes of the same size, a timer.',
+  steps:['Predict first: which melts more ice, the hot cup or the warm bowl?','Put one ice cube in the small hot cup and one in the big warm bowl.','Watch for 10 minutes. Which ice shrinks more?'],
+  see:'The big warm bowl often melts its ice faster or about the same, even though the cup is hotter.',teach:'Temperature is how hot. Heat is how much energy. More water holds more heat. Melting ice takes heat (latent heat) and heat flows from hot to cold.'},
+ {id:'e1',t:'Ice in two cups: insulation',min:20,tags:['cond','insul','latent','flow'],mat:'2 cups, 3 equal ice cubes in each, a towel or foil, a timer.',
+  steps:['Predict first: which cup keeps its ice longer?','Wrap one cup in the towel. Leave the other bare.','Check both every 5 minutes for 20 minutes. Compare how much ice is left.'],
+  see:'The wrapped cup keeps more ice.',teach:'Insulation slows conduction. The room is hotter than the ice, so heat flows into the ice. While ice melts it stays at 0 °C.'},
+ {id:'e2',t:'Cooling curve of warm water',min:15,tags:['flow','units','cool'],mat:'A cup of warm tap water (not boiling), a thermometer, a timer, paper.',
+  steps:['Predict first: does it cool the same amount every minute?','Write the temperature now. Then write it every minute for 10 minutes.','Look at the drops: which minute dropped the most?'],
+  see:'It drops fast at first, then slower and slower.',teach:'Heat flows faster when the temperature gap is bigger. As the water nears room temperature, the flow slows (Newton cooling). Record in °C and try adding 273 to see Kelvin.'},
+ {id:'e3',t:'Spoon test: who feels hot?',min:5,tags:['cond','spec'],mat:'A metal spoon, a wooden spoon, a plastic spoon, a cup of warm tap water, a mug of water left in the sun.',
+  steps:['Predict first: which spoon handle gets warm fastest?','Put all three spoons in the warm water for 30 seconds. Touch the handles.','Leave a metal spoon and a mug of water in the same sunny spot for 5 minutes. Touch both.'],
+  see:'Metal handle warms fast, wood stays cool. In the sun the metal gets hot while the water stays cooler.',teach:'Metal conducts well, wood and plastic are insulators. Water is stubborn (high specific heat), metal is not.'},
+ {id:'e4',t:'Ice and water mix',min:15,tags:['latent','mix','flow'],mat:'200 mL warm tap water, 3 ice cubes, a thermometer, a spoon, a timer.',
+  steps:['Predict first: will the water get as cold as the ice?','Write the starting temperature, add the ice, and stir gently.','Record the temperature every minute until the ice is gone. Notice when it stops dropping.'],
+  see:'The temperature falls and then holds near 0 °C while ice remains.',teach:'Melting needs energy (Q = m L), taken from the warm water (Q = m c ΔT). Check first: does the water have enough energy to melt all the ice?'},
+ {id:'e5',t:'Dark cup vs white cup',min:15,tags:['rad','absorb','device'],mat:'2 identical cups with equal water, black paper, white paper or foil, a lamp or sun, a thermometer.',
+  steps:['Predict first: which cup warms more?','Wrap one cup in black paper and one in white or foil.','Put both under the lamp or in the sun for 10 minutes. Compare the temperature rise.'],
+  see:'The black cup warms more.',teach:'Dark surfaces absorb more radiation. This is the idea behind the heat-collecting device: absorb, then trap.'},
+ {id:'e6',t:'Flashlight distance',min:5,tags:['invsq','rad'],mat:'A phone flashlight, a wall, a ruler.',
+  steps:['Predict first: if you go twice as far, how bright is it?','Shine the light from 30 cm and trace the spot size.','Repeat at 60 cm. Compare the spot size and brightness.'],
+  see:'The spot is bigger and dimmer.',teach:'Light spreads over an area that grows like r². Twice as far means 1/4 as bright. That is why the lamp height matters.'},
+ {id:'e7',t:'Balloon on a bottle',min:10,tags:['gas','units'],mat:'An empty bottle, a balloon, a bowl of warm tap water, a bowl of cold water with ice.',
+  steps:['Predict first: what happens to the balloon in warm water?','Stretch the balloon over the bottle mouth.','Stand the bottle in warm water for 2 minutes, then in cold water for 2 minutes.'],
+  see:'The balloon inflates when warm and shrinks when cold.',teach:'Heated gas pushes harder and expands (PV = nRT). Use Kelvin in gas formulas.'},
+ {id:'e8',t:'Work turns into heat',min:5,tags:['first'],mat:'Your hands, or a sealed jar with a little water.',
+  steps:['Predict first: does moving energy disappear?','Rub your hands together hard for 10 seconds.','Optional: shake a sealed jar with a little water 100 times and feel it.'],
+  see:'Your hands (and the water) get warmer.',teach:'First law: ΔU = Q − W. Work you put in becomes energy in the system. Energy is not lost.'},
+ {id:'e9',t:'Food coloring: hot vs cold',min:10,tags:['conv','entropy'],mat:'2 clear cups, one with hot tap water and one with cold, food coloring, a timer.',
+  steps:['Predict first: which spreads faster?','Add one drop to each cup without stirring.','Watch for 2 minutes. Then notice it never gathers back into a drop.'],
+  see:'The drop spreads faster in hot water.',teach:'Molecules move faster when it is hot, so mixing is faster. The spreading never undoes itself: entropy goes up.'},
+ {id:'e10',t:'Evaporation cools',min:5,tags:['latent','flow'],mat:'A cotton ball, water, a thermometer or your skin, a fan or your breath.',
+  steps:['Predict first: does wet feel cooler or warmer than dry?','Wet the back of your hand and blow on it.','Compare it to a dry spot.'],
+  see:'The wet spot feels cold.',teach:'Evaporating water takes energy (latent heat) from your skin. That is why sweating cools you.'},
+ {id:'e11',t:'Thick vs thin insulation',min:15,tags:['cond','cool','rateL','insul'],c:1,mat:'2 identical cups of warm water, a towel, a thermometer, a timer.',
+  steps:['Predict first: how much slower does 4 layers cool than 1?','Wrap one cup in 1 layer and the other in 4 layers.','Record each temperature every 2 minutes for 10 minutes.'],
+  see:'The thicker wrap cools more slowly.',teach:'Conduction rate Q/t = k A ΔT / L. A bigger L (thicker) slows the heat flow.'},
+ {id:'e12',t:'Mini device trial',min:20,tags:['device','rad','absorb','insul'],mat:'A cup of water, a cardboard box, foil, black paper, a lamp, a thermometer.',
+  steps:['Predict first: what is the best layout to heat the water?','Line a box with foil, put the cup inside with black paper around it, and place it under the lamp.','Run it for 10 minutes, record the rise, then change one thing and run it again. Log it in Device & log.'],
+  see:'Each change shows what helps most.',teach:'Absorb the heat, trap it, and change one thing at a time. Never touch the device or lamp during the real heating time.'}];
+function exGet(){return jget('thermo_exps',{});}
+function exToggle(id){const o=exGet();o[id]=!o[id];jset('thermo_exps',o);render();}
+function expView(d){const dn=exGet(),C=d==='C',list=EXPS.filter(x=>C||!x.c),conc=CONC.filter(x=>C||!x.c);
+ const cov=id=>list.some(e=>dn[e.id]&&e.tags.includes(id)),n=conc.filter(x=>cov(x.id)).length;
+ return `<div class="tip"><b>Experiments.</b> Predict first, then try it, then say what you saw. Doing it yourself is what makes the idea stick.</div>
+ <div class="card"><h3>Ideas the experiments cover <span class="pill">${n}/${conc.length}</span></h3><p class="small">Orange = no experiment done yet for that idea. Green = covered.</p><div class="row">`+conc.map(x=>cov(x.id)?`<span style="background:var(--okbg);border:1px solid var(--ok);border-radius:14px;padding:2px 10px">&#10003; ${x.t}</span>`:`<span style="background:var(--accbg);border:2px solid var(--acc);border-radius:14px;padding:2px 10px;font-weight:700">${x.t}</span>`).join('')+`</div></div>`+
+ list.map(e=>{const done=!!dn[e.id];return `<details class="card"><summary><b>${done?'&#9989; ':''}${e.t}</b> <span class="small">(${e.min} min)</span>${e.c?' <span class="pill cp">C</span>':''}</summary>
+ <div class="row small" style="margin-top:6px">${e.tags.map(t=>`<span style="background:var(--accbg);border-radius:12px;padding:1px 8px">${CONC.find(c=>c.id===t).t}</span>`).join('')}</div>
+ <p><b>You need:</b> ${e.mat}</p><ol>${e.steps.map(s=>`<li>${s}</li>`).join('')}</ol><div class="try"><b>You should see:</b> ${e.see}</div><div class="mem"><b>Why it matters:</b> ${e.teach}</div>
+ <div class="row"><button class="${done?'ghost':'btn'}" onclick="exToggle('${e.id}')">${done?'Undo done':'I did it'}</button></div></details>`}).join('');}
+
+// ---------- EXTRAS: today tasks, formula a day, demos, one-pager, team mode ----------
+const TOP10=['f1','f2','f3','f5','f7','f8','f9','f10','f11','f13'];
+const ICON={f1:'🛁',f2:'🧊',f3:'🌡️',f4:'🌡️',f5:'🍲',f6:'🏖️',f7:'🥄',f8:'🎈',f9:'🔥',f10:'🥤',f11:'🪞',f12:'🚲',f13:'🏦',f14:'🖋️',f15:'🍕',f16:'🌊',f17:'🚗',f18:'🔦',f19:'🍳',f20:'🧣',f21:'🧱'};
+const DEMO={
+ f1:'Put a spoonful of hot tap water in a small cup and fill a big bowl with warm tap water. The cup is hotter, but the bowl holds more heat because there is more water.',
+ f2:'Hold an ice cube in your palm for 30 seconds. Your hand cools because heat is leaving your hand and going into the ice.',
+ f3:'Look at today\'s temperature in Celsius. Write it down and add 273. That number is Kelvin.',
+ f4:'Open a weather app and switch between F and C. Find 32 F = 0 C. Then find 98.6 F = 37 C on any thermometer.',
+ f5:'Pour a spoonful of hot tap water and a full cup of hot tap water. After 30 seconds, which is cooler? The small amount, because it has less mass to hold the heat.',
+ f6:'Leave a metal spoon and a mug of water in the same sunny spot for a few minutes. Touch both: the metal gets hot fast, the water stays cooler.',
+ f7:'Put a metal spoon and a wooden spoon in a cup of warm tap water for 30 seconds. Touch both handles. Which is warmer?',
+ f8:'Hold your hand about 5 cm above a mug of warm water, then beside it. You feel warm air rising from the top.',
+ f9:'Stand in sunlight with your eyes closed, then step into shade. You feel the heat leave with no wind needed.',
+ f10:'Wet the back of your hand and blow on it. It feels cold as the water evaporates and takes heat from your skin.',
+ f11:'Breathe on a cold mirror or window (fog = condensation). Look at frost on the inside of a freezer (deposition).',
+ f12:'Squeeze an air-filled balloon. Feel how it pushes back harder the smaller you make it.',
+ f13:'Rub your hands together hard for 10 seconds. Your work (motion) turned into heat. Energy was not lost.',
+ f14:'Put one drop of food coloring in a clear cup of water and watch it spread. It never gathers itself back up.',
+ f15:'Feel a phone charger or laptop after it has been working. The warmth is wasted energy.',
+ f16:'Drop a ball from one step, then from a high step. A bigger drop gives more energy: a bigger hot-to-cold gap gives a better engine.',
+ f17:'Put a dark cup and a white cup of water in sunlight for a few minutes and feel which is warmer. Wrap one in a sock to see insulation.',
+ f18:'Shine a phone flashlight on a wall from 30 cm, then 60 cm. The spot is 4 times bigger and much dimmer.',
+ f19:'Watch a toaster or stove coil heat up (do not touch): dark, then red, then orange. Hotter means brighter and bluer.',
+ f20:'Wrap one cup of warm water in one towel and another in three towels. After a few minutes feel which stays warmer.',
+ f21:'Walk toward a wall, covering half of the remaining distance each step. You get closer and closer but never quite touch it.'};
+FEEL.forEach(c=>{c.d=DEMO[c.id]||'';c.e=ICON[c.id]||''});
+function pl(s){if(!s)return s;let o=s;const g=[['ΔT','ΔT (how far the temperature changed)'],['deltaT','ΔT (how far the temperature changed)'],['ΔU','ΔU (change in energy)'],['sigma','sigma (a fixed number)']];g.forEach(([k,v])=>{const i=o.indexOf(k);if(i>=0&&o.slice(i,i+k.length+2)!==k+' (')o=o.slice(0,i)+v+o.slice(i+k.length)});return o;}
+const SB=[
+ {say:'Heat is how much energy. Temperature is how hot. A bathtub of warm water has more heat than a cup of boiling water.',do:'Do the bathtub picture, then run the Picture drill for 5 minutes.'},
+ {say:'Heat moves three ways: touch, flowing air or water, and light.',do:'Do the spoon-in-water demo and the phone flashlight demo (Hands-on tab).'},
+ {say:'While ice melts the temperature stays at 0. The energy is busy melting it.',do:'Do the ice-in-a-cup demo, then the Formula a day.'},
+ {say:'Energy in minus energy out is what you keep. Heat only goes from hot to cold by itself.',do:'Do the rub-your-hands demo, then sing Heat Hero at 85%.'},
+ {say:'Match each name to one word: Joule = work, Carnot = engine, Kelvin = scale, Clausius = entropy.',do:'Run the History quiz in the Division B Quiz tab.'},
+ {say:'Absorb the heat, then trap it. Never touch the device or the lamp during the heating time.',do:'Build, test under the lamp, and log every run in Device & log.'}];
+const SC=[
+ {say:'We start with the B ideas, fast. Tell me what you already know.',do:'Run the B quizzes (multiple choice only) and note the gaps.'},
+ {say:'Check units first. Use Kelvin for ratios. Write the formula before the numbers.',do:'Formula a day, then the calculators for checking answers.'},
+ {say:'Double the Kelvin gives 16 times the glow, because of the fourth power.',do:'Run the T to the fourth PC demo (Hands-on tab) and sing Fourth Power at 85%.'},
+ {say:'Squeeze it, pressure goes up. Heat it, pressure goes up.',do:'Do the balloon demo and try the 2018-19 WNY practice test.'},
+ {say:'Match names to ideas: Boltzmann, Planck, Maxwell, Clausius.',do:'Run the mixed quiz on C.'},
+ {say:'A tighter prediction beats a bigger number. Log many runs.',do:'Run the device many times and compare to your prediction.'}];
+// ----- formulas, one a day -----
+const FMLS=[
+ {id:'k',lv:'B',card:'f3',d:'Turn degrees Celsius into Kelvin.',f:'K = °C + 273.15',w:['K = °C − 273.15','K = °C × 273.15','K = °F + 273.15']},
+ {id:'fc',lv:'B',card:'f4',d:'Turn degrees Fahrenheit into Celsius.',f:'°C = (°F − 32) × 5/9',w:['°C = (°F + 32) × 5/9','°C = (°F − 32) × 9/5','°C = °F × 5/9 − 32']},
+ {id:'q',lv:'B',card:'f5',d:'Heat needed to change the temperature of something.',f:'Q = m c ΔT',w:['Q = m + c + ΔT','Q = m ÷ (c ΔT)','Q = c ΔT ÷ m']},
+ {id:'ql',lv:'B',card:'f10',d:'Heat needed to melt or boil something (no temperature change).',f:'Q = m L',w:['Q = m c L','Q = L ÷ m','Q = m + L']},
+ {id:'u',lv:'B',card:'f13',d:'The first law: how the energy of a system changes.',f:'ΔU = Q − W',w:['ΔU = Q + W','ΔU = W − Q','ΔU = Q × W']},
+ {id:'eff',lv:'B',card:'f15',d:'How good an engine is.',f:'Efficiency = work out ÷ heat in',w:['Efficiency = heat in ÷ work out','Efficiency = work out × heat in','Efficiency = heat in − work out']},
+ {id:'pv',lv:'B',card:'f12',d:'The ideal gas law.',f:'PV = nRT',w:['P + V = nRT','PT = nRV','P ÷ V = nRT']},
+ {id:'inv',lv:'B',card:'f18',d:'How lamp brightness falls with distance.',f:'Brightness ∝ 1 / r²',w:['Brightness ∝ 1 / r','Brightness ∝ r²','Brightness ∝ 1 / r³']},
+ {id:'car',lv:'C',card:'f16',d:'The best any engine can possibly do (Carnot).',f:'Max efficiency = 1 − T cold ÷ T hot',w:['Max efficiency = 1 − T hot ÷ T cold','Max efficiency = 1 + T cold ÷ T hot','Max efficiency = T cold ÷ T hot']},
+ {id:'sb',lv:'C',card:'f19',d:'Power a hot object glows with (Stefan–Boltzmann).',f:'P = σ A T⁴',w:['P = σ A T²','P = σ T ÷ A','P = A T⁴ ÷ σ']},
+ {id:'cond',lv:'C',card:'f20',d:'How fast heat flows through a wall.',f:'Q/t = k A ΔT ÷ L',w:['Q/t = k A L ÷ ΔT','Q/t = k ΔT ÷ (A L)','Q/t = A ΔT L ÷ k']}];
+function fmList(lv){return FMLS.filter(x=>lv==='C'||x.lv==='B');}
+function fdGet(){return jget('thermo_fday',{done:[],last:''});}
+function fmShuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+let fmCur=null,fmMode='new',fmTry=0;
+function fmInit(){const lv=tab==='C'?'C':'B';const L=fmList(lv),st=fdGet();const next=L.find(x=>!st.done.includes(x.id));
+ if(next&&st.last!==today()){fmCur=next;fmMode='new'}else{const pool=L.filter(x=>st.done.includes(x.id));fmCur=pool.length?pool[Math.floor(Math.random()*pool.length)]:null;fmMode=next?'wait':'review'}
+ fmTry=0;fmPaint();}
+function fmPaint(){const e=document.getElementById('fmBox');if(!e)return;const lv=tab==='C'?'C':'B',L=fmList(lv),st=fdGet();const n=L.filter(x=>st.done.includes(x.id)).length;
+ let h=`<div class="small">Formulas learned: ${n} of ${L.length}. One new formula per day.</div><div class="bar"><i style="width:${Math.round(100*n/L.length)}%"></i></div>`;
+ if(!fmCur){h+='<p>Come back tomorrow for your first formula.</p>';e.innerHTML=h;return}
+ const c=FEEL.find(x=>x.id===fmCur.card);
+ h+=`<h3>${fmMode==='new'?'Today\'s formula':fmMode==='wait'?'Done for today. Practice an earlier formula':'Review'}</h3><div class="mem"><b>Picture it ${c.e}:</b> ${pl(c.a)}</div><div class="try"><b>Try it (30 seconds):</b> ${c.d}</div>`;
+ const opts=fmShuf([fmCur.f].concat(fmCur.w));window._fmOpts=opts;
+ h+=`<div style="margin:10px 0;font-size:17px"><b>Which formula is this?</b><br>${fmCur.d}</div>`+opts.map((o,i)=>`<button class="opt" onclick="fmPick(${i})">${o}</button>`).join('')+'<div id="fmFb"></div>';e.innerHTML=h;}
+function fmPick(i){const ok=window._fmOpts[i]===fmCur.f;const fb=document.getElementById('fmFb');const btns=document.querySelectorAll('#fmBox .opt');
+ btns.forEach((b,k)=>{if(window._fmOpts[k]===fmCur.f)b.classList.add('ok');else if(k===i&&!ok)b.classList.add('bad')});
+ if(ok){fmTry++;if(fmMode==='new'){const st=fdGet();if(!st.done.includes(fmCur.id))st.done.push(fmCur.id);st.last=today();jset('thermo_fday',st);fb.innerHTML=`<div class="fb ok"><b>Right!</b> ${fmCur.f}. That is today's formula done. Come back tomorrow for the next one.</div><div class="row"><button class="ghost" onclick="fmInit()">Practice an earlier one</button></div>`}else fb.innerHTML=`<div class="fb ok"><b>Right!</b> ${fmCur.f}</div><div class="row"><button class="btn" onclick="fmInit()">Next</button></div>`;}
+ else fb.innerHTML=`<div class="fb bad">Not that one. Look at the picture above, then try again.</div><div class="row"><button class="ghost" onclick="fmPaint()">Try again</button></div>`;}
+// ----- test habits quiz (easy multiple choice) -----
+const HAB=[
+ {q:'Which temperature scale do you use in gas and radiation formulas?',o:['Kelvin','Celsius','Fahrenheit'],a:0},
+ {q:'What should you do first on the test?',o:['The easy questions','The hardest question','Nothing, just wait'],a:0},
+ {q:'Before using a formula, what should match?',o:['The units','The color of the pen','The page number'],a:0},
+ {q:'Heat flows from...',o:['hot to cold','cold to hot','nowhere'],a:0},
+ {q:'A question is taking too long. What do you do?',o:['Skip it and come back','Stay stuck until time runs out','Leave it blank forever'],a:0},
+ {q:'After you get a number, what should you do?',o:['Check the units and that it makes sense','Never look at it again','Round it to zero'],a:0}];
+let habI=0,habScore=0;
+function habPaint(){const e=document.getElementById('habBox');if(!e)return;if(habI>=HAB.length){e.innerHTML=`<div class="res"><b>Done!</b> ${habScore} of ${HAB.length} right.</div><div class="row"><button class="btn" onclick="habI=0;habScore=0;habPaint()">Again</button></div>`;return}
+ const q=HAB[habI],ord=fmShuf(q.o.map((t,i)=>({t,ok:i===q.a})));window._habO=ord;
+ e.innerHTML=`<div class="small">Question ${habI+1} of ${HAB.length}</div><div style="font-size:17px;margin:6px 0">${q.q}</div>`+ord.map((o,i)=>`<button class="opt" onclick="habPick(${i})">${o.t}</button>`).join('')+'<div id="habFb"></div>';}
+function habPick(i){const o=window._habO;const btns=document.querySelectorAll('#habBox .opt');btns.forEach((b,k)=>{if(o[k].ok)b.classList.add('ok');else if(k===i)b.classList.add('bad')});if(o[i].ok)habScore++;document.getElementById('habFb').innerHTML=`<div class="fb ${o[i].ok?'ok':'bad'}">${o[i].ok?'Right!':'Not quite. The green one is right.'}</div><div class="row"><button class="btn" onclick="habI++;habPaint()">Next</button></div>`;}
+function formulaView(){return `<div class="tip"><b>One formula a day.</b> Look at the picture, try the 30-second demo, then pick the right formula out of four. That is all for today.</div><div class="card" id="fmBox"></div><h2 class="th">Test habits (quick)</h2><div class="card" id="habBox"></div>`;}
+// ----- today's tasks, streak, locked-in count -----
+function nGet(){return jget('thermo_feel_n',{});}
+function tdGet(){return (jget('thermo_today',{}))[today()]||{};}
+function tdToggle(k){const a=jget('thermo_today',{});const d=a[today()]||{};d[k]=!d[k];a[today()]=d;jset('thermo_today',a);render();}
+function go(t,s){tab=t;sub[t]=s;quiz=null;render();window.scrollTo(0,0);}
+function streakN(){const tm=jget('thermo_feel_time',{});const d=new Date();let n=0;const key=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');if(!tm[key(d)])d.setDate(d.getDate()-1);while(tm[key(d)]){n++;d.setDate(d.getDate()-1)}return n;}
+function lockedToday(){const l=jget('thermo_feel_lock',{});return Object.values(l).filter(v=>v===today()).length;}
+function statsBar(){const p=planGet();const day=Math.min(Math.max(0,dayN(p.start,today()))+1,p.days);return `<div class="row small"><span>&#128197; Day <b>${day}</b> of ${p.days}</span><span>&#128293; Streak <b>${streakN()}</b> day${streakN()===1?'':'s'}</span><span>&#9989; Cards locked in today <b>${lockedToday()}</b></span></div>`;}
+function tasksCard(){const td=tdGet(),n=(nGet()[today()]||0),fd=fdGet();
+ const T=[{k:'formula',t:'Learn today\'s formula',sub:'formula',auto:fd.last===today()},{k:'drill',t:'Drill 10 picture cards ('+Math.min(n,10)+'/10)',sub:'feel',auto:n>=10},{k:'sing',t:'Sing along to one song',sub:'songs'},{k:'demo',t:'Do one hands-on demo',sub:'demos'},{k:'video',t:'Watch one video (optional)',sub:'vids'}];
+ const done=T.filter(x=>x.auto||td[x.k]).length;
+ return `<div class="card"><h3>Today's tasks <span class="pill">${done}/${T.length}</span></h3>${statsBar()}<p class="small">About 15 minutes. Tap Go for each one.</p>`+T.map(x=>{const d=x.auto||td[x.k];return `<div class="row" style="margin:6px 0"><span style="font-size:20px">${d?'&#9989;':'&#11036;'}</span><span style="flex:1 1 180px">${x.t}</span><button class="btn" onclick="go('${tab}','${x.sub}')">Go</button>${x.auto===undefined?`<button class="ghost" onclick="tdToggle('${x.k}')">${td[x.k]?'Undo':'Mark done'}</button>`:''}</div>`}).join('')+'</div>';}
+function coachStart(){return `<div class="tip"><b>Start here (coach).</b> Three steps. Do them in this order, about 15 minutes a day.</div>${statsBar()}
+ <div class="card"><h3>1. Watch</h3><div>Pick one short video. Kids just watch.</div><div class="row"><button class="btn" onclick="go('B','vids')">Videos (Division B)</button><button class="ghost" onclick="go('C','vids')">Videos (Division C)</button></div></div>
+ <div class="card"><h3>2. Sing</h3><div>Play the song at 70%, then 85%, then normal. Tap a line to jump to it.</div><div class="row"><button class="btn" onclick="go('B','songs')">Songs (Division B)</button><button class="ghost" onclick="go('C','songs')">Songs (Division C)</button><button class="ghost" onclick="tab='T';sub.T='S';render()">Sync the timing</button></div></div>
+ <div class="card"><h3>3. Drill 10 minutes a day</h3><div>Picture cards first (the top 10), then one formula a day.</div><div class="row"><button class="btn" onclick="go('B','feel')">Picture drill</button><button class="ghost" onclick="go('B','formula')">Formula a day</button><button class="ghost" onclick="go('B','demos')">Hands-on demos</button><button class="ghost" onclick="go('B','exps')">Experiments</button></div></div>
+ <div class="card"><h3>Share and print</h3><div class="row"><button class="btn" onclick="dlOnePager()">Download the 1-page sheet</button><button class="ghost" onclick="printOnePager()">Print it</button></div><p class="small">Top 10 facts with a picture each. Open the downloaded file and print it.</p></div>`;}
+// ----- one pager -----
+function onePagerHtml(){const C=TOP10.map(id=>FEEL.find(x=>x.id===id));return `<!doctype html><html><head><meta charset="utf-8"><title>Thermodynamics: Top 10</title><style>body{font:15px/1.4 system-ui,Segoe UI,sans-serif;margin:20px;color:#111}h1{font-size:22px;margin:0 0 4px}.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.c{border:2px solid #d9480f;border-radius:10px;padding:8px 10px;break-inside:avoid}.c b{font-size:16px}.e{font-size:26px;float:left;margin-right:8px}.s{color:#d9480f;font-weight:700;margin:2px 0}@media print{body{margin:8mm}}</style></head><body><h1>Thermodynamics: the top 10</h1><div>Say the memory line out loud, then picture it.</div><div class="g">${C.map((c,i)=>`<div class="c"><div class="e">${c.e}</div><b>${i+1}. ${c.t}</b><div class="s">${c.s}</div><div>${c.a}</div></div>`).join('')}</div></body></html>`;}
+function dlOnePager(){const b=new Blob([onePagerHtml()],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thermodynamics_top10.html';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);}
+function printOnePager(){const w=window.open('','_blank');if(!w){alert('Pop-up blocked. Use Download instead.');return}w.document.write(onePagerHtml());w.document.close();w.focus();setTimeout(()=>w.print(),400);}
+// ----- hands-on demos (text + on-screen) -----
+function demosView(){return `<div class="tip"><b>Hands-on.</b> Each one takes about 30 seconds with things in your kitchen. Or try the on-screen versions first.</div>
+ <div class="card"><h3>On the screen: flashlight distance</h3><div class="row">Distance: <input type="range" id="dm1" min="1" max="4" step="0.5" value="1" oninput="demoUp()"> <b id="dm1v"></b></div><div id="dm1b" style="background:#ffd43b;border-radius:50%;margin:8px auto;transition:all .2s"></div><div class="res" id="dm1t"></div></div>
+ <div class="card"><h3>On the screen: heat flows hot to cold</h3><div class="row">Hot block <input type="number" id="dm2h" value="90" style="width:70px"> &deg;C &nbsp; Cold block <input type="number" id="dm2c" value="10" style="width:70px"> &deg;C <button class="btn" onclick="demoMix()">Touch them</button></div><div class="row"><div style="flex:1 1 140px;padding:14px;border-radius:8px;text-align:center" id="dm2a">Hot</div><div style="flex:1 1 140px;padding:14px;border-radius:8px;text-align:center" id="dm2b">Cold</div></div><div class="res" id="dm2t">Press Touch them. Heat moves until both are the same.</div></div>
+ <div class="card"><h3>On the screen: water vs metal (stubborn)</h3><div class="row">Heat added: <input type="range" id="dm3" min="500" max="5000" step="100" value="1000" oninput="demoUp()"> <b id="dm3v"></b></div><div class="res" id="dm3t"></div><p class="small">Same 100 g each. Water is stubborn (c = 4.186), aluminum is not (c = 0.90). ΔT = Q ÷ (m × c).</p></div>
+ <div class="card"><h3>On the screen: T to the fourth (glow)</h3><div class="row">Temperature: <input type="range" id="dm4" min="300" max="1200" step="50" value="300" oninput="demoUp()"> <b id="dm4v"></b></div><div id="dm4b" style="height:50px;border-radius:8px;margin:8px 0"></div><div class="res" id="dm4t"></div></div>
+ <h2 class="th">At home (30 seconds each)</h2>`+FEEL.map(c=>`<details class="card"><summary><b>${c.e} ${c.t}</b>${c.c?' <span class="pill cp">C</span>':''}</summary><div class="try">${c.d}</div></details>`).join('');}
+function demoUp(){const d=parseFloat(document.getElementById('dm1').value);document.getElementById('dm1v').textContent=d+'x as far';const s=60*d;const b=document.getElementById('dm1b');b.style.width=s+'px';b.style.height=s+'px';b.style.opacity=Math.max(.15,1/(d*d));document.getElementById('dm1t').textContent='Brightness: '+Math.round(100/(d*d))+'% of the close-up. Spread over '+(d*d)+' times the area.';
+ const q=parseFloat(document.getElementById('dm3').value);document.getElementById('dm3v').textContent=q+' J';document.getElementById('dm3t').textContent='Water warms '+(q/(100*4.186)).toFixed(1)+' °C. Aluminum warms '+(q/(100*0.9)).toFixed(1)+' °C.';
+ const T=parseFloat(document.getElementById('dm4').value);document.getElementById('dm4v').textContent=T+' K';const r=Math.pow(T/300,4);const col=T<700?'#2b2b2b':T<850?'#7a1a0a':T<1000?'#d9480f':T<1100?'#ff9d2e':'#ffe08a';document.getElementById('dm4b').style.background=col;document.getElementById('dm4t').textContent='Glow power: '+(r<10?r.toFixed(1):Math.round(r))+' times the 300 K amount. ('+(T/300).toFixed(2)+'x the temperature, to the fourth power.)';}
+function demoMix(){let h=parseFloat(document.getElementById('dm2h').value),c=parseFloat(document.getElementById('dm2c').value);if(isNaN(h)||isNaN(c))return;const a=document.getElementById('dm2a'),b=document.getElementById('dm2b'),t=document.getElementById('dm2t');if(window._mx)clearInterval(window._mx);const col=v=>`hsl(${Math.max(0,Math.min(240,240-v*2.4))},70%,60%)`;const draw=()=>{a.textContent='Hot block '+h.toFixed(1)+' °C';b.textContent='Cold block '+c.toFixed(1)+' °C';a.style.background=col(h);b.style.background=col(c)};draw();window._mx=setInterval(()=>{const x=(h-c)*0.15;h-=x;c+=x;draw();if(Math.abs(h-c)<0.2){clearInterval(window._mx);t.textContent='Both ended near '+((h+c)/2).toFixed(1)+' °C. Heat moved from hot to cold, never the other way.'}},120);}
+function demoInit(){if(document.getElementById('dm1')){demoUp();demoMix()}}
+// ----- team mode -----
+const TEAM={on:false,turn:0,score:[0,0],names:['Player 1','Player 2']};
+function teamPaint(){const e=document.getElementById('teamBar');if(!e)return;e.innerHTML=TEAM.on?`<div class="res"><b>${TEAM.names[TEAM.turn]}'s turn.</b> Score: ${TEAM.names[0]} ${TEAM.score[0]} &middot; ${TEAM.names[1]} ${TEAM.score[1]} <button class="ghost" onclick="TEAM.score=[0,0];TEAM.turn=0;teamPaint()">Reset scores</button></div>`:'';}
+function teamSet(on){TEAM.on=on;TEAM.turn=0;TEAM.score=[0,0];teamPaint();}
+function teamName(i,v){TEAM.names[i]=v||('Player '+(i+1));teamPaint();}
+
+function feel(coach,lv){if(!feelCur)feelCur=FEEL[0].id;lv=lv||'B';
+ return `<div class="tip"><b>Learn it with your body and your kitchen.</b> Each card gives a real thing you can touch, then the one-line memory, then the numbers. The top 10 come first. A few cards every day is what makes it stick.</div>
+ <div class="card" id="feelPlan"></div>
+ <div class="card"><div class="row"><b>Level:</b><select id="feelLv" onchange="feelNext()"><option value="B" ${lv==='B'?'selected':''}>Division B</option><option value="C" ${lv==='C'?'selected':''}>Division C (adds the purple C cards)</option></select><select id="feelSet" onchange="feelNext()"><option value="top">Top 10 first</option><option value="all">All cards</option></select><button class="ghost" onclick="feelNext()">Skip</button><button class="ghost" onclick="feelSay()">&#128266; Read this card</button></div>
+ <div class="row small"><label><input type="checkbox" id="teamOn" onchange="teamSet(this.checked)" ${TEAM.on?'checked':''}> Team mode: two partners take turns</label><input value="${TEAM.names[0]}" onchange="teamName(0,this.value)" style="width:100px"><input value="${TEAM.names[1]}" onchange="teamName(1,this.value)" style="width:100px"></div><div id="teamBar"></div><div id="feelDrill"></div></div>
+ <h2 class="th">All cards (read-through)</h2>`+FEEL.map(c=>`<details class="card"><summary><b>${c.e} ${c.t}</b>${c.c?' <span class="pill cp">C</span>':''}${TOP10.includes(c.id)?' <span class="pill">top 10</span>':''}</summary><div class="hook">${c.s}</div><div class="mem"><b>Picture it:</b> ${pl(c.a)}</div>${c.d?`<div class="try"><b>Try it (30 seconds):</b> ${c.d}</div>`:''}${c.n?`<div class="try"><b>With numbers:</b> ${pl(c.n)}</div>`:''}${coach?`<div class="mem"><b>Coach script.</b> Say: ${c.s} Do: ${c.d}</div>`:''}</details>`).join('');}
+function teach(w){
+ if(w==='S')return songs();
+ if(w==='start')return coachStart();
+ if(w==='students')return studentsView();
+ if(w==='F')return feel(true,'B');
+ if(w==='D')return `<div class="card"><h3>What changes from B to C</h3><table><tr><th></th><th>Division B</th><th>Division C</th></tr>
+ <tr><td>Event</td><td>Build lamp-heat device + written test (official 2027 rules)</td><td>Same description on the official page; full C rules not read yet</td></tr>
+ <tr><td>Test topics</td><td>5 areas: systems/units, phases &amp; gas law, heat transfer, processes &amp; laws, history. Radiation topics State/Nat only</td><td>Expect the same 5 + radiation: blackbody, exitance, Stefan&ndash;Boltzmann, 3rd law</td></tr>
+ <tr><td>Math level</td><td>Arithmetic, simple algebra, simple geometry. No trig/calculus</td><td>Likely multi-step formula problems (Q=mc&Delta;T, ice/water mixes, Carnot, T&#8308;, ideal gas) &mdash; confirm</td></tr>
+ <tr><td>Teaching goal</td><td>Words, units, definitions, names, direction of heat flow</td><td>All of B fast, then calculations and radiation</td></tr>
+ <tr><td>Device</td><td>Same heat-collecting build and prediction scoring (confirm C limits)</td><td>Same build; tighter prediction expected</td></tr></table>
+ <p class="small">Items marked "expect" or "confirm" are inferred, not from the C rules.</p></div>`;
+ const B=w==='B';
+ const plan=B?[
+ ['Session 1: What is heat? (systems &amp; temperature)','Learn card 1. Demo: two cups of different water amounts, same temperature. Teach: temperature vs heat, K/&deg;C/&deg;F with the converter, joule/calorie. Quiz: Systems (MC only).'],
+ ['Session 2: Heat on the move (transfer)','Conduction / convection / radiation with hands-on examples (metal vs foam, lamp). Specific heat idea. Introduce Q=mc&Delta;T using the calculator only.'],
+ ['Session 3: Phases &amp; gas','Ice melt demo (temperature stays at 0 during melting). Phase names, latent vs sensible, pV=nRT in words.'],
+ ['Session 4: Laws, processes, engines','Zeroth/1st/2nd laws in plain English; iso-words; efficiency = out &divide; in; entropy as "spread out".'],
+ ['Session 5: History names','Name&rarr;one word memory hook list; flashcard-style quiz on Hist topic.'],
+ ['Session 6+: Device build &amp; predict','Build, test under a lamp, log runs in Device &amp; log tab, practice the prediction and the rules checklist (no touching, no hazardous materials).']
+ ]:[
+ ['Session 1: Fast B review','Run the B quizzes (MC only) to find gaps. Skip what they already know.'],
+ ['Session 2: Calculations that matter','Q=mc&Delta;T, ice+water mixes (check if all ice melts first), first law &Delta;U=Q&minus;W, efficiency and Carnot limit. Always: write units, use Kelvin for ratios, use the calculators to check.'],
+ ['Session 3: Radiation (C extra)','Blackbody, radiant exitance, Stefan&ndash;Boltzmann T&#8308; ("double T = 16&times;"), Wien, Planck. Third law.'],
+ ['Session 4: Gas &amp; processes with numbers','pV=nRT problems, iso-processes on pV diagrams, entropy direction; the 2018&ndash;19 WNY invitational test is good practice.'],
+ ['Session 5: History + mixed quiz','Boltzmann/Planck/Maxwell/Clausius connections; full mixed quiz on C.'],
+ ['Session 6+: Device &amp; prediction','Same device work as B but aim for tighter predictions: log many runs, learn the heating curve.']
+ ];
+ return `<div class="tip">${B?'Teaching Division B: keep it concrete and word-based. Math is limited to arithmetic and simple algebra.':'Teaching Division C: B knowledge plus radiation and calculation practice. Check the C rules PDF when you have it.'}</div>`+plan.map((p,i)=>{const sc=(B?SB:SC)[i];return `<div class="card"><h3>${p[0]}</h3><div>${p[1]}</div>${sc?`<div class="mem"><b>Say:</b> ${sc.say}<br><b>Do:</b> ${sc.do}</div>`:''}</div>`}).join('')+
+ `<div class="card"><h3>Quick links</h3><div>Use <b>${B?'Division B':'Division C'}</b> &rarr; Quiz to run these sessions. Calculators are under that tab too.</div></div>`;}
+// ---------- SING-ALONG (student songs tab) + speed ----------
+function rateGet(){const r=parseFloat(localStorage.getItem('thermo_songrate'));return [0.7,0.85,1].includes(r)?r:1;}
+function setRate(r){try{localStorage.setItem('thermo_songrate',String(r))}catch(e){}document.querySelectorAll('audio[data-song]').forEach(a=>{a.playbackRate=r;a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true});document.querySelectorAll('.rateb').forEach(b=>{b.classList.toggle('btn',parseFloat(b.dataset.r)===r);b.classList.toggle('ghost',parseFloat(b.dataset.r)!==r)});}
+function rateBar(){const r=rateGet();return `<div class="row"><b>Speed:</b>${[[0.7,'70%'],[0.85,'85%'],[1,'100% (normal)']].map(([v,n])=>`<button class="rateb ${v===r?'btn':'ghost'}" data-r="${v}" onclick="setRate(${v})">${n}</button>`).join('')}</div>`;}
+window.lyCur={};
+function lyTick(id){const a=document.getElementById('sa_'+id);if(!a)return;const t=sTimes(id);let cur=curLine(t,a.currentTime);
+ const lp=document.getElementById('lp_'+id);if(lp&&lp.checked&&cur>=0){const L=songLines(id),sec=L[cur].sec;let st=-1,en=null;L.forEach((x,i)=>{if(x.sec===sec&&t[i]!==null&&(st<0||t[i]<t[st]))st=i});for(let i=0;i<L.length;i++){if(L[i].sec>sec&&t[i]!==null){en=t[i];break}}if(st>=0&&en!==null&&a.currentTime>=en-0.05&&!a.paused){a.currentTime=t[st];return}}
+ if(window.lyCur[id]===cur)return;window.lyCur[id]=cur;t.forEach((_,k)=>{const e=document.getElementById('ly_'+id+'_'+k);if(e){e.style.background=k===cur?'var(--accbg)':'';e.style.fontWeight=k===cur?'700':'';}});const e=document.getElementById('ly_'+id+'_'+cur);if(e&&!a.paused)scrollIn(e);}
+function lyGo(id,k){const a=document.getElementById('sa_'+id);const s=sTimes(id)[k];if(s===null)return;a.currentTime=s;a.play();}
+function songsStudent(d){const list=SONGS.filter(s=>d==='C'||s.id==='hh');
+ return `<div class="tip"><b>Sing along.</b> Press play and follow the highlighted line. Tap any line to jump there. Slow it to 70% to learn the words, then go back to 100%. Tick "Loop this part" to repeat one verse over and over: repetition is what makes it stick.</div>`+list.map(s=>{const L=songLines(s.id),t=sTimes(s.id),has=t.some(v=>v!==null);let last='';
+ return `<div class="card"><h3>&#127925; ${s.title}</h3><audio id="sa_${s.id}" data-song="1" controls preload="none" style="width:100%" src="${s.file}" onloadedmetadata="setRate(rateGet())" onplay="setRate(rateGet())" ontimeupdate="lyTick('${s.id}')" onseeked="lyTick('${s.id}')"></audio>
+ ${rateBar()}<label class="small"><input type="checkbox" id="lp_${s.id}"> Loop this part (the verse or chorus currently playing)</label>
+ ${has?'':'<p class="small">Line timing has not been set for this song yet. The coach sets it in <b>Teach: B vs C &rarr; Songs &amp; my checklist</b>. You can still play and read along.</p>'}
+ <div class="lyrbox">${L.map((x,k)=>{let h='';if(x.tag!==last){last=x.tag;h=`<div class="small" style="margin-top:10px;color:var(--acc);font-weight:700">${x.tag}</div>`}return h+`<div id="ly_${s.id}_${k}" onclick="lyGo('${s.id}',${k})" style="padding:3px 8px;border-radius:6px;cursor:pointer;font-size:17px">${x.ln}${x.note?`<div class="small" style="font-weight:400;font-size:13px">${x.note}</div>`:''}</div>`}).join('')}</div></div>`}).join('');}
+// ---------- READ ALOUD (text to speech) ----------
+const SPK={rate:parseFloat(localStorage.getItem('thermo_rate'))||0.95,auto:localStorage.getItem('thermo_auto')==='1'};
+function spkClean(t){return t.replace(/Δ/g,'delta ').replace(/°C/g,' degrees Celsius').replace(/°F/g,' degrees Fahrenheit').replace(/×/g,' times ').replace(/÷/g,' divided by ').replace(/[−–]/g,' minus ').replace(/⁴/g,' to the fourth').replace(/²/g,' squared').replace(/³/g,' cubed').replace(/→/g,' to ').replace(/=/g,' equals ').replace(/\//g,' over ').replace(/\s+/g,' ').trim();}
+function speak(t){if(!window.speechSynthesis||!t)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(spkClean(t));u.rate=SPK.rate;const vs=speechSynthesis.getVoices();const v=vs.find(x=>/en[-_]US/i.test(x.lang)&&/natural|aria|jenny|google|samantha/i.test(x.name))||vs.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u);}
+function spkText(el){const c=el.cloneNode(true);c.querySelectorAll('.spk,button,select,input,audio,svg,script,style').forEach(n=>n.remove());return c.textContent;}
+function spkCard(btn){speak(spkText(btn.parentElement));}
+function spkInject(){document.querySelectorAll('#view .card:not([data-spk])').forEach(c=>{c.setAttribute('data-spk','1');if(c.querySelector('audio')||c.id==='feelPlan')return;c.style.position='relative';const b=document.createElement('button');b.className='ghost spk';b.title='Read aloud';b.textContent='🔊';b.style.cssText='position:absolute;top:8px;right:8px;padding:2px 8px;font-size:15px';b.onclick=function(e){e.stopPropagation();e.preventDefault();spkCard(this)};c.appendChild(b);});}
+(function(){const x=document.getElementById('xp');if(x)x.insertAdjacentHTML('afterend',`<div class="row small" style="margin:4px 0"><b>🔊 Read aloud:</b> speed <select id="spkRate" onchange="SPK.rate=parseFloat(this.value);localStorage.setItem('thermo_rate',this.value)"><option value="0.75">slow</option><option value="0.95">normal</option><option value="1.2">fast</option></select><label><input type="checkbox" id="spkAuto" onchange="SPK.auto=this.checked;localStorage.setItem('thermo_auto',this.checked?'1':'0')"> auto-read drill cards</label><button class="ghost" onclick="speechSynthesis.cancel()">Stop</button></div>`);const r=document.getElementById('spkRate');if(r){r.value=String(SPK.rate);if(!r.value)r.value='0.95'}const a=document.getElementById('spkAuto');if(a)a.checked=SPK.auto;
+ const v=document.getElementById('view');if(v)new MutationObserver(spkInject).observe(v,{childList:true,subtree:true});if(window.speechSynthesis)speechSynthesis.getVoices();})();
+// ---------- ACCOUNTS + PROGRESS SYNC (optional: needs config.js and a Supabase project) ----------
+const SYNC_KEYS=['thermo_stats','thermo_log','thermo_feel','thermo_feel_days','thermo_feel_time','thermo_feel_hist','thermo_feel_n','thermo_feel_lock','thermo_feel_miss','thermo_plan','thermo_today','thermo_exps','thermo_fday','thermo_chk','thermo_rate','thermo_auto','thermo_songrate'];
+let SBC=null,SESSION=null,ROLE='local',NICK='',lastSnap='',lastShared='',loginCoach=false;
+const EMAIL_DOMAIN='thermo.class';
+function teachOk(){return ROLE==='coach'||(ROLE==='local'&&!cfgOk())}
+function cfgOk(){return !!(window.THERMO_CFG&&THERMO_CFG.url&&THERMO_CFG.key&&!/YOUR_/.test(THERMO_CFG.url+THERMO_CFG.key)&&window.supabase)}
+function snapData(){const d={};SYNC_KEYS.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)d[k]=v});return d}
+function applyData(d){SYNC_KEYS.forEach(k=>{if(d&&typeof d[k]==='string'){try{localStorage.setItem(k,d[k])}catch(e){}}})}
+function loginUi(msg){let o=document.getElementById('loginBox');if(!o){o=document.createElement('div');o.id='loginBox';o.style.cssText='position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto';document.body.appendChild(o)}
+ o.innerHTML=`<div class="card" style="max-width:380px;width:100%"><h1 style="font-size:22px">&#128293; Heat Hero Trainer</h1><p class="small">${loginCoach?'Coach sign in':'Sign in with your nickname and the password your coach gave you.'}</p>
+ <div style="display:grid;gap:8px"><input id="lgU" placeholder="${loginCoach?'Coach email':'Nickname'}" autocapitalize="none" autocomplete="username" style="width:100%"><input id="lgP" type="password" placeholder="Password" autocomplete="current-password" style="width:100%" onkeydown="if(event.key==='Enter')doLogin()"><button class="btn" onclick="doLogin()">Sign in</button></div>
+ <div class="fb bad" id="lgErr" ${msg?'':'hidden'}>${msg||''}</div>
+ <div class="row small" style="margin-top:10px"><button class="ghost" onclick="loginCoach=!loginCoach;loginUi()">${loginCoach?'Student sign in':'Coach sign in'}</button><button class="ghost" onclick="skipLogin()">Use without signing in</button></div><p class="small">Without signing in, progress is saved on this device only and your coach cannot see it.</p></div>`;}
+function hideLogin(){const o=document.getElementById('loginBox');if(o)o.remove();}
+function skipLogin(){ROLE='local';if(tab==='T')tab='B';hideLogin();render();}
+async function doLogin(){const u=document.getElementById('lgU').value.trim(),p=document.getElementById('lgP').value;if(!u||!p){loginUi('Enter both boxes.');return}
+ const email=(loginCoach||u.includes('@'))?u:(u.toLowerCase().replace(/[^a-z0-9._-]/g,'')+'@'+EMAIL_DOMAIN);
+ const r=await SBC.auth.signInWithPassword({email,password:p});
+ if(r.error||!r.data.session){loginUi('That nickname or password did not work. Ask your coach.');return}
+ await onSession(r.data.session);}
+async function signOut(){await pushProgress(true);try{await SBC.auth.signOut()}catch(e){}SESSION=null;ROLE='local';NICK='';location.reload();}
+async function loadShared(){try{const r=await SBC.from('shared').select('data').eq('key','timings').maybeSingle();if(r.data&&r.data.data&&typeof r.data.data.v==='string'){localStorage.setItem('thermo_lsync',r.data.data.v);lastShared=r.data.data.v}}catch(e){}}
+async function pushShared(){try{const v=localStorage.getItem('thermo_lsync')||'{}';if(v===lastShared)return;await SBC.from('shared').upsert({key:'timings',data:{v},updated_at:new Date().toISOString()});lastShared=v}catch(e){}}
+async function pullProgress(){try{const r=await SBC.from('progress').select('data').eq('user_id',SESSION.user.id).maybeSingle();if(r.data&&r.data.data&&Object.keys(r.data.data).length){applyData(r.data.data)}else{await pushProgress(true)}}catch(e){}}
+async function pushProgress(force){if(ROLE!=='student'||!SESSION)return;const d=snapData(),s=JSON.stringify(d);if(!force&&s===lastSnap)return;lastSnap=s;try{await SBC.from('progress').upsert({user_id:SESSION.user.id,nick:NICK,data:d,updated_at:new Date().toISOString()})}catch(e){lastSnap=''}}
+async function onSession(s){SESSION=s;NICK=(s.user.email||'').split('@')[0];let coach=false;try{const c=await SBC.from('coaches').select('user_id').eq('user_id',s.user.id).maybeSingle();coach=!!(c.data)}catch(e){}
+ ROLE=coach?'coach':'student';{const ow=localStorage.getItem('thermo_owner');if(ow!==s.user.id){SYNC_KEYS.forEach(k=>localStorage.removeItem(k));try{localStorage.setItem('thermo_owner',s.user.id)}catch(e){}}}await loadShared();if(ROLE==='student')await pullProgress();hideLogin();
+ if(ROLE==='student'){lastSnap=JSON.stringify(snapData());setInterval(()=>pushProgress(false),15000);document.addEventListener('visibilitychange',()=>{if(document.hidden)pushProgress(false)})}
+ else setInterval(pushShared,5000);
+ const x=document.getElementById('spkRate');const bar=document.getElementById('acct');if(!bar){const b=document.createElement('div');b.id='acct';b.className='row small';b.style.margin='4px 0';b.innerHTML=`<span>Signed in as <b>${NICK}</b>${ROLE==='coach'?' (coach)':''}</span><button class="ghost" onclick="signOut()">Sign out</button>`;const xp=document.getElementById('xp');if(xp)xp.insertAdjacentElement('afterend',b)}
+ if(!teachOk()&&tab==='T')tab='B';render();}
+async function authInit(){if(!cfgOk()){ROLE='local';return}SBC=window.supabase.createClient(THERMO_CFG.url,THERMO_CFG.key);let s=null;try{const r=await SBC.auth.getSession();s=r.data.session}catch(e){}
+ if(s)await onSession(s);else loginUi();}
+// ----- coach dashboard -----
+function dayKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function pj(d,k,dflt){try{return JSON.parse(d[k])||dflt}catch(e){return dflt}}
+function studentStats(row){const d=row.data||{};const tm=pj(d,'thermo_feel_time',{}),b=pj(d,'thermo_feel',{}),dy=pj(d,'thermo_feel_days',{}),ms=pj(d,'thermo_feel_miss',{}),fd=pj(d,'thermo_fday',{done:[]}),ex=pj(d,'thermo_exps',{});
+ let n=0,s=0,l=0;FEEL.forEach(c=>{const nd=(dy[c.id]||[]).length;if(!nd){n++;return}if((b[c.id]||0)>=4&&nd>=2)l++;else s++});
+ const now=new Date();let streak=0;const x=new Date(now);if(!tm[dayKeyOf(x)])x.setDate(x.getDate()-1);while(tm[dayKeyOf(x)]){streak++;x.setDate(x.getDate()-1)}
+ const todayMin=Math.round((tm[dayKeyOf(now)]||0)/6)/10;let weekMin=0;for(let i=0;i<7;i++){const y=new Date(now);y.setDate(y.getDate()-i);weekMin+=(tm[dayKeyOf(y)]||0)}weekMin=Math.round(weekMin/6)/10;
+ const days=Object.keys(tm).sort();const last=days.length?days[days.length-1]:null;const since=last?dayN(last,dayKeyOf(now)):null;
+ const weak=FEEL.map(c=>({t:c.t,m:ms[c.id]||0,streak:b[c.id]||0,seen:(dy[c.id]||[]).length})).filter(c=>c.m>=2&&c.streak<4).sort((a,c)=>c.m-a.m).slice(0,4);
+ const flags=[];if(since===null)flags.push('Has not started');else if(since>=3)flags.push('Quiet for '+since+' days');if(since!==null&&weekMin<10)flags.push('Under 10 min this week');if(weak.length)flags.push('Keeps missing: '+weak.slice(0,3).map(w=>w.t).join(', '));
+ return {nick:row.nick,n,s,l,streak,todayMin,weekMin,since,formulas:(fd.done||[]).length,exps:Object.values(ex).filter(Boolean).length,weak,flags,updated:row.updated_at};}
+function studentsView(){return `<div class="tip"><b>Students.</b> Everyone who has signed in with a nickname shows here. Orange rows may need a quick chat.</div><div class="card"><div class="row"><button class="btn" onclick="renderStudents()">Refresh</button><span class="small" id="stuMsg"></span></div><div id="stuBox" class="small">Loading...</div></div>`;}
+async function renderStudents(){const box=document.getElementById('stuBox'),msg=document.getElementById('stuMsg');if(!box)return;if(!SBC||ROLE!=='coach'){box.textContent='Sign in as coach to see students.';return}
+ msg.textContent='Loading...';let r;try{r=await SBC.from('progress').select('nick,data,updated_at')}catch(e){box.textContent='Could not load.';return}if(r.error){box.textContent='Could not load: '+r.error.message;msg.textContent='';return}
+ const st=(r.data||[]).map(studentStats).sort((a,c)=>(c.flags.length-a.flags.length)||a.nick.localeCompare(c.nick));msg.textContent=st.length+' student'+(st.length===1?'':'s');
+ if(!st.length){box.innerHTML='No students have signed in yet.';return}
+ box.innerHTML='<div style="overflow-x:auto"><table><tr><th>Nickname</th><th>Streak</th><th>Min today / week</th><th>Cards: long / short / new</th><th>Formulas</th><th>Experiments</th><th>Last active</th><th>Notes</th></tr>'+st.map(x=>`<tr style="${x.flags.length?'background:var(--accbg)':''}"><td><b>${x.nick.replace(/[<>&]/g,'')}</b></td><td>${x.streak}</td><td>${x.todayMin} / ${x.weekMin}</td><td>${x.l} / ${x.s} / ${x.n}</td><td>${x.formulas}</td><td>${x.exps}</td><td>${x.since===null?'never':x.since===0?'today':x.since+' d ago'}</td><td>${x.flags.length?x.flags.join('<br>'):'On track'}</td></tr>`).join('')+'</table></div>';}
+
+render();
+authInit();
+</script></body></html>

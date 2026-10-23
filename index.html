@@ -166,7 +166,7 @@ const RANKS=[[0,'Rookie'],[100,'Heat Seeker'],[300,'Thermo Whiz'],[600,'Carnot C
 function showXP(){const e=$('#xp');if(!e)return;const x=store().xp||0;let r=0;RANKS.forEach((a,i)=>{if(x>=a[0])r=i});const nx=RANKS[r+1];const pct=nx?Math.round(100*(x-RANKS[r][0])/(nx[0]-RANKS[r][0])):100;e.innerHTML='<b>'+RANKS[r][1]+'</b> &middot; '+x+' XP'+(nx?' &middot; '+(nx[0]-x)+' to '+nx[1]:' &middot; max rank!')+'<div class="xpbar"><i style="width:'+pct+'%"></i></div>';}
 function nav(){if(tab==='T'&&!teachOk()){tab='B'}showXP();
  $('#tabs').innerHTML=[['B','Division B'],['C','Division C'],['T','Teach: B vs C']].filter(x=>x[0]!=='T'||teachOk()).map(([k,n])=>`<button class="tab ${k} ${tab===k?'on':''}" onclick="tab='${k}';quiz=null;clearInterval(window.GT);G=null;render()">${n}</button>`).join('');
- const subs=tab==='T'?[['start','Start here (coach)'],['B','Teach Division B'],['C','Teach Division C'],['D','B vs C differences'],['S','Songs & my checklist'],['F','Feel it + drill']].concat(ROLE==='coach'?[['students','Students (progress)']]:[]):[['path','Start here'],['vids','Videos'],['learn','Learn'],['games','Games'],['quiz','Quiz'],['tools','Calculators'],['feel','Picture drill'],['formula','Formula a day'],['demos','Hands-on'],['exps','Experiments'],['songs','Songs'],['dev','Device & log']];
+ const subs=tab==='T'?[['start','Start here (coach)'],['B','Teach Division B'],['C','Teach Division C'],['D','B vs C differences'],['S','Songs & my checklist'],['F','Feel it + drill']].concat(ROLE==='coach'?[['students','Students (progress)'],['addstu','Add a student']]:[]):[['path','Start here'],['vids','Videos'],['learn','Learn'],['games','Games'],['quiz','Quiz'],['tools','Calculators'],['feel','Picture drill'],['formula','Formula a day'],['demos','Hands-on'],['exps','Experiments'],['songs','Songs'],['dev','Device & log']];
  $('#subtabs').innerHTML=subs.map(([k,n])=>`<button class="st ${sub[tab]===k?'on':''}" onclick="sub[tab]='${k}';quiz=null;render()">${n}</button>`).join('');
 }
 function render(){if(sub[tab]!=='games'&&G){clearInterval(window.GT);G=null}nav();const v=$('#view');
@@ -811,6 +811,7 @@ function teach(w){
  if(w==='S')return songs();
  if(w==='start')return coachStart();
  if(w==='students')return studentsView();
+ if(w==='addstu')return addStuView();
  if(w==='F')return feel(true,'B');
  if(w==='D')return `<div class="card"><h3>What changes from B to C</h3><table><tr><th></th><th>Division B</th><th>Division C</th></tr>
  <tr><td>Event</td><td>Build lamp-heat device + written test (official 2027 rules)</td><td>Same description on the official page; full C rules not read yet</td></tr>
@@ -894,6 +895,25 @@ async function onSession(s){SESSION=s;NICK=(s.user.email||'').split('@')[0];let 
  if(!teachOk()&&tab==='T')tab='B';render();}
 async function authInit(){if(!cfgOk()){ROLE='local';return}SBC=window.supabase.createClient(THERMO_CFG.url,THERMO_CFG.key);let s=null;try{const r=await SBC.auth.getSession();s=r.data.session}catch(e){}
  if(s)await onSession(s);else loginUi();}
+// ----- add a student (coach only) -----
+const PW_WORDS=['sun','moon','star','fire','ice','wave','heat','cold','gas','atom','spark','steam','frost','glow','lamp','cup'];
+function genPw(){const w=()=>PW_WORDS[Math.floor(Math.random()*PW_WORDS.length)];return w()+'-'+w()+'-'+(10+Math.floor(Math.random()*90));}
+function addStuView(){return `<div class="tip"><b>Add a student.</b> Pick a nickname (no real names) and a password. Write both down: passwords cannot be looked up later.</div>
+ <div class="card"><div style="display:grid;gap:8px;max-width:360px"><label class="small">Nickname (letters and numbers, 2 to 20 characters)<input id="asN" autocapitalize="none" style="width:100%"></label>
+ <label class="small">Password (at least 6 characters)<input id="asP" style="width:100%"></label>
+ <div class="row"><button class="ghost" onclick="document.getElementById('asP').value=genPw()">Make a password for me</button><button class="btn" onclick="addStudent()">Create student</button></div></div>
+ <div id="asOut" style="margin-top:10px"></div></div>
+ <div class="card"><h3>Other things you can do</h3><ul class="small"><li>Reset a password or delete a student: Supabase &rarr; Authentication &rarr; Users.</li><li>See how they are doing: Students (progress) tab.</li></ul><div class="row"><a href="https://supabase.com/dashboard/project/jtucoosyaucdpvhhwqmq/auth/users" target="_blank" rel="noopener">Open the Supabase Users page</a></div></div>`;}
+async function addStudent(){const out=document.getElementById('asOut');const nick=document.getElementById('asN').value.trim().toLowerCase(),pw=document.getElementById('asP').value;
+ if(!/^[a-z0-9._-]{2,20}$/.test(nick)){out.innerHTML='<div class="fb bad">Nickname: use 2 to 20 letters, numbers, dot, dash or underscore. No spaces.</div>';return}
+ if(pw.length<6){out.innerHTML='<div class="fb bad">Password needs at least 6 characters.</div>';return}
+ if(!window.supabase||!THERMO_CFG){out.innerHTML='<div class="fb bad">Not connected to the database.</div>';return}
+ out.innerHTML='<div class="small">Creating...</div>';
+ const tmp=window.supabase.createClient(THERMO_CFG.url,THERMO_CFG.key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+ let r;try{r=await tmp.auth.signUp({email:nick+'@'+EMAIL_DOMAIN,password:pw})}catch(e){out.innerHTML='<div class="fb bad">Could not reach the database. Try again.</div>';return}
+ if(r.error){const m=r.error.message||'';out.innerHTML=`<div class="fb bad">${/already|registered/i.test(m)?'That nickname is taken. Try another.':'Could not create: '+m.replace(/[<>&]/g,'')}</div>`;return}
+ if(r.data&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0){out.innerHTML='<div class="fb bad">That nickname is taken. Try another.</div>';return}
+ out.innerHTML=`<div class="fb ok"><b>Created.</b> Give this to the student:<br>Nickname: <b>${nick}</b><br>Password: <b>${pw.replace(/[<>&]/g,'')}</b><br><span class="small">Write it down now. It will not be shown again.</span></div>`;document.getElementById('asN').value='';document.getElementById('asP').value='';}
 // ----- coach dashboard -----
 function dayKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function pj(d,k,dflt){try{return JSON.parse(d[k])||dflt}catch(e){return dflt}}

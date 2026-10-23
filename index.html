@@ -172,7 +172,7 @@ function nav(){if(tab==='T'&&!teachOk()){tab='B'}showXP();
 function render(){if(sub[tab]!=='games'&&G){clearInterval(window.GT);G=null}nav();const v=$('#view');
  if(tab==='T')v.innerHTML=teach(sub.T);else if(sub[tab]==='path')v.innerHTML=tasksCard()+path(tab);else if(sub[tab]==='vids')v.innerHTML=vids(tab);else if(sub[tab]==='games')v.innerHTML=games(tab);else if(sub[tab]==='learn')v.innerHTML=learn(tab);else if(sub[tab]==='quiz')quizView(tab);else if(sub[tab]==='tools')v.innerHTML=tools(tab);else if(sub[tab]==='songs')v.innerHTML=songsStudent(tab);else if(sub[tab]==='feel')v.innerHTML=feel(false,tab);else if(sub[tab]==='formula')v.innerHTML=formulaView();else if(sub[tab]==='demos')v.innerHTML=demosView();else if(sub[tab]==='exps')v.innerHTML=expView(tab);else v.innerHTML=device();
  if(sub[tab]==='tools'&&tab!=='T')calcInit();
- if((tab==='T'&&sub.T==='F')||(tab!=='T'&&sub[tab]==='feel')){planPaint();feelNext();}if(tab!=='T'&&sub[tab]==='formula'){fmInit();habPaint();}if(tab!=='T'&&sub[tab]==='demos')demoInit();if(tab==='T'&&sub.T==='students')renderStudents();}
+ if((tab==='T'&&sub.T==='F')||(tab!=='T'&&sub[tab]==='feel')){planPaint();feelNext();}if(tab!=='T'&&sub[tab]==='formula'){fmInit();habPaint();}if(tab!=='T'&&sub[tab]==='demos')demoInit();if(tab==='T'&&sub.T==='students')renderStudents();if(tab==='T'&&sub.T==='addstu')renderStuList();}
 function topicsFor(d){return d==='B'?['sys','phase','heat','proc','hist','dev']:['sys','phase','heat','proc','hist','rad','dev'];}
 function shufQ(q){if(!q.o||(q.o.length===2&&q.o[0]==='True'))return q;const idx=q.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return {...q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a)};}
 function lq(d,id){return Q.filter(q=>q.l===id&&(d==='C'||q.lv==='B'));}
@@ -903,7 +903,20 @@ function addStuView(){return `<div class="tip"><b>Add a student.</b> Pick a nick
  <label class="small">Password (at least 6 characters)<input id="asP" style="width:100%"></label>
  <div class="row"><button class="ghost" onclick="document.getElementById('asP').value=genPw()">Make a password for me</button><button class="btn" onclick="addStudent()">Create student</button></div></div>
  <div id="asOut" style="margin-top:10px"></div></div>
- <div class="card"><h3>Other things you can do</h3><ul class="small"><li>Reset a password or delete a student: Supabase &rarr; Authentication &rarr; Users.</li><li>See how they are doing: Students (progress) tab.</li></ul><div class="row"><a href="https://supabase.com/dashboard/project/jtucoosyaucdpvhhwqmq/auth/users" target="_blank" rel="noopener">Open the Supabase Users page</a></div></div>`;}
+ <div class="card"><h3>Your students</h3><div class="row"><button class="ghost" onclick="renderStuList()">Refresh</button><span class="small" id="stuListMsg"></span></div><div id="stuList" class="small" style="overflow-x:auto">Loading...</div></div>
+ <div class="card"><h3>Other things you can do</h3><ul class="small"><li>Reset a password: Supabase &rarr; Authentication &rarr; Users.</li><li>See how they are doing: Students (progress) tab.</li></ul><div class="row"><a href="https://supabase.com/dashboard/project/jtucoosyaucdpvhhwqmq/auth/users" target="_blank" rel="noopener">Open the Supabase Users page</a></div></div>`;}
+function safeNick(s){return String(s).replace(/[^a-z0-9._-]/gi,'');}
+async function renderStuList(){const box=document.getElementById('stuList');if(!box)return;if(!SBC||ROLE!=='coach'){box.textContent='Sign in as coach to see students.';return}
+ box.textContent='Loading...';let r;try{r=await SBC.rpc('list_students')}catch(e){box.textContent='Could not load the list.';return}
+ if(r.error){box.textContent='Could not load the list: '+String(r.error.message).replace(/[<>&]/g,'');return}
+ const rows=r.data||[];if(!rows.length){box.textContent='No students yet.';return}
+ box.innerHTML='<table><tr><th>Nickname</th><th>Created</th><th>Last sign in</th><th></th></tr>'+rows.map(x=>{const n=safeNick(x.nick);return `<tr><td><b>${n}</b></td><td>${new Date(x.created_at).toLocaleDateString()}</td><td>${x.last_sign_in?new Date(x.last_sign_in).toLocaleDateString():'never'}</td><td><button class="ghost" id="del_${n}" onclick="delStudent('${n}')">Delete</button></td></tr>`}).join('')+'</table>';}
+window._delArm={};
+async function delStudent(nick){const b=document.getElementById('del_'+nick),m=document.getElementById('stuListMsg');
+ if(!window._delArm[nick]){window._delArm[nick]=1;if(b){b.textContent='Tap again to delete';b.style.borderColor='var(--bad)'}if(m)m.textContent='Deleting '+nick+' removes their login and all their progress.';setTimeout(()=>{window._delArm[nick]=0;const bb=document.getElementById('del_'+nick);if(bb){bb.textContent='Delete';bb.style.borderColor=''}},4000);return}
+ window._delArm[nick]=0;if(m)m.textContent='Deleting...';let r;try{r=await SBC.rpc('delete_student',{p_nick:nick})}catch(e){if(m)m.textContent='Could not delete. Try again.';return}
+ if(r.error){if(m)m.textContent='Could not delete: '+String(r.error.message).replace(/[<>&]/g,'');return}
+ if(m)m.textContent=r.data?('Deleted '+nick+'.'):('No student named '+nick+' was found.');renderStuList();}
 async function addStudent(){const out=document.getElementById('asOut');const nick=document.getElementById('asN').value.trim().toLowerCase(),pw=document.getElementById('asP').value;
  if(!/^[a-z0-9._-]{2,20}$/.test(nick)){out.innerHTML='<div class="fb bad">Nickname: use 2 to 20 letters, numbers, dot, dash or underscore. No spaces.</div>';return}
  if(pw.length<6){out.innerHTML='<div class="fb bad">Password needs at least 6 characters.</div>';return}
@@ -913,7 +926,7 @@ async function addStudent(){const out=document.getElementById('asOut');const nic
  let r;try{r=await tmp.auth.signUp({email:nick+'@'+EMAIL_DOMAIN,password:pw})}catch(e){out.innerHTML='<div class="fb bad">Could not reach the database. Try again.</div>';return}
  if(r.error){const m=r.error.message||'';out.innerHTML=`<div class="fb bad">${/already|registered/i.test(m)?'That nickname is taken. Try another.':'Could not create: '+m.replace(/[<>&]/g,'')}</div>`;return}
  if(r.data&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0){out.innerHTML='<div class="fb bad">That nickname is taken. Try another.</div>';return}
- out.innerHTML=`<div class="fb ok"><b>Created.</b> Give this to the student:<br>Nickname: <b>${nick}</b><br>Password: <b>${pw.replace(/[<>&]/g,'')}</b><br><span class="small">Write it down now. It will not be shown again.</span></div>`;document.getElementById('asN').value='';document.getElementById('asP').value='';}
+ out.innerHTML=`<div class="fb ok"><b>Created.</b> Give this to the student:<br>Nickname: <b>${nick}</b><br>Password: <b>${pw.replace(/[<>&]/g,'')}</b><br><span class="small">Write it down now. It will not be shown again.</span></div>`;document.getElementById('asN').value='';document.getElementById('asP').value='';renderStuList();}
 // ----- coach dashboard -----
 function dayKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function pj(d,k,dflt){try{return JSON.parse(d[k])||dflt}catch(e){return dflt}}
